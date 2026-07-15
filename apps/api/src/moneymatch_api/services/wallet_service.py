@@ -68,6 +68,18 @@ def _require_positive(amount_cents: int) -> None:
         )
 
 
+async def get_wallet(
+    session: AsyncSession, user_id: uuid.UUID, *, currency: str = DEMO
+) -> Wallet:
+    """Fetch the wallet for reads (no lock)."""
+    wallet = await session.scalar(
+        select(Wallet).where(Wallet.user_id == user_id, Wallet.currency == currency)
+    )
+    if wallet is None:
+        raise WalletNotFoundError()
+    return wallet
+
+
 async def lock_wallet(
     session: AsyncSession, user_id: uuid.UUID, *, currency: str = DEMO
 ) -> Wallet:
@@ -81,6 +93,22 @@ async def lock_wallet(
     if wallet is None:
         raise WalletNotFoundError()
     return wallet
+
+
+async def count_withdrawals_since(
+    session: AsyncSession, wallet_id: uuid.UUID, since
+) -> int:
+    """Number of demo withdrawals on a wallet since `since` (velocity cap)."""
+    count = await session.scalar(
+        select(func.count())
+        .select_from(LedgerEntry)
+        .where(
+            LedgerEntry.wallet_id == wallet_id,
+            LedgerEntry.entry_type == "demo_withdrawal",
+            LedgerEntry.created_at >= since,
+        )
+    )
+    return int(count or 0)
 
 
 async def _apply(

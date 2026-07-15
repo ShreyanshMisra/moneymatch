@@ -67,6 +67,13 @@ DEFAULT_MAX_CONCURRENT_CONTESTS = 3
 # not a magic starting balance (04-phase-1 · deliverable 3).
 SIGNUP_GRANT_CENTS = 100_000  # $1,000.00
 
+# Server-defined "Add funds" presets (no arbitrary client amounts — 04-phase-1
+# design rules). $10 / $25 / $50 / $100.
+DEMO_DEPOSIT_PRESETS_CENTS = (1_000, 2_500, 5_000, 10_000)
+
+# Demo withdrawals are velocity-capped (04-phase-1 · deliverable 4).
+DEMO_WITHDRAWAL_DAILY_LIMIT = 5
+
 
 class Wallet(Base, TimestampMixin):
     __tablename__ = "wallets"

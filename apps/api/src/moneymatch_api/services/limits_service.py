@@ -77,6 +77,48 @@ def promote_pending(limit: Limit, *, now: datetime | None = None) -> Limit:
     return limit
 
 
+async def request_limit_change(
+    session: AsyncSession,
+    user_id: uuid.UUID,
+    *,
+    daily_loss_cap_cents: int | None = None,
+    daily_entry_cap_cents: int | None = None,
+    now: datetime | None = None,
+) -> Limit:
+    """Apply limit edits: lowering (more protective) is instant; raising a cap
+    is staged behind a 24 h cooldown (`pending_limits` + `pending_effective_at`).
+    """
+    now = now or datetime.now(UTC)
+    limit = await get_or_create_limits(session, user_id)
+    promote_pending(limit, now=now)
+
+    requested = {
+        "daily_loss_cap_cents": daily_loss_cap_cents,
+        "daily_entry_cap_cents": daily_entry_cap_cents,
+    }
+    pending = dict(limit.pending_limits or {})
+    for field, value in requested.items():
+        if value is None:
+            continue
+        if value <= 0:
+            raise APIError("invalid_limit", "Limit must be positive.", status_code=422)
+        if value <= getattr(limit, field):
+            setattr(limit, field, value)  # lowering / equal — instant
+            pending.pop(field, None)
+        else:
+            pending[field] = value  # raising — defer
+
+    if pending:
+        limit.pending_limits = pending
+        limit.pending_effective_at = now + RAISE_COOLDOWN
+    else:
+        limit.pending_limits = None
+        limit.pending_effective_at = None
+
+    await session.flush()
+    return limit
+
+
 async def daily_usage(
     session: AsyncSession, wallet: Wallet, *, now: datetime | None = None
 ) -> DailyUsage:

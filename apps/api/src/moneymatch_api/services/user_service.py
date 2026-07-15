@@ -109,3 +109,11 @@ async def complete_onboarding(
             status_code=409,
         ) from exc
     return user
+
+
+async def self_exclude(session: AsyncSession, user: User) -> User:
+    """Freeze staking irreversibly (via API). `assert_can_stake` blocks any
+    non-active user; escrow already held settles normally through the worker."""
+    user.status = "self_excluded"
+    await session.flush()
+    return user
