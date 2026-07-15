@@ -57,6 +57,10 @@ explicit_package_bases = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+# One event loop for the whole session so the module-global async engine (and its
+# asyncpg pool) is never used across loops.
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
 testpaths = ["tests"]
 pythonpath = ["src"]
 

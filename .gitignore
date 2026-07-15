@@ -27,3 +27,6 @@ coverage/
 .vscode/
 playwright-report/
 test-results/
+
+#other
+.claude
