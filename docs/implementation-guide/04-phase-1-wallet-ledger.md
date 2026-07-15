@@ -23,13 +23,18 @@ every settlement path writes to, and the future AML/audit trail; build it right 
      `canJoin` loss-cap bug for good — enforcement is server-side only.)
 3. New-user provisioning grants a `DEMO` wallet with a **$1,000.00 signup
    credit** as a ledger row (`demo_deposit`, memo "signup grant") — not a magic
-   starting number.
+   starting number. The grant is **funded from `platform:promo`** (chart of
+   accounts, `01-architecture.md` §2) so demo money never appears from nowhere
+   and the global solvency invariant
+   `sum(user available + escrow) == promo funding − rake` holds at all times.
 4. Endpoints: `GET /wallet`, `GET /wallet/ledger` (cursor-paginated),
    `POST /wallet/demo-deposit` (presets $10/$25/$50/$100 only, server-defined),
    `POST /wallet/demo-withdrawal` (≤ available; velocity-capped at 5/day).
 5. Reconciliation: `reconciliation_service.check(ref)` asserting
    `sum(payouts) + rake == sum(entries)` per contest ref, plus a global
-   `check_all()` (used by the worker in Phase 3 and admin in Phase 6).
+   `check_all()` that also asserts the **solvency invariant** across all
+   wallets vs. `platform:promo`/`platform:rake` (used by the worker in Phase 3
+   and admin in Phase 6).
 6. **Wallet screen** (PDF p.10): Available / In escrow / Lifetime stat bar,
    Add-funds preset pills, Recent ledger list with signed amounts and relative
    time. Header balance component (used on Play) reads the same query.

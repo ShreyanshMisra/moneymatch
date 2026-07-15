@@ -11,17 +11,26 @@ able to *summon* opponents; see `docs/business/business-and-competition.md` §3)
 ## Deliverables
 
 1. Migrations: `friendships`, `challenges`, (extend) `notifications`.
-2. **Friends service + endpoints**: add by username, request/accept/decline,
-   presence-lite (`last_seen_at` heartbeat on API activity; green dot =
-   active in last 5 min). No chat at MVP.
+2. **Friends service + endpoints**: add by username (exact match on MoneyMatch
+   handle, never host-game accounts — don't leak linkage) or by **friend code**
+   (short immutable code like `MM-7F3K2Q` on Profile; the design's "Add by
+   username or code" input) — codes avoid a scrapeable public directory.
+   Request/accept/decline/block; caps (500 friends, 20 pending outbound);
+   presence-lite (`last_seen_at` heartbeat; green dot = active in last 5 min).
+   No chat at MVP.
 3. **Challenges** (the design's "Invite friend" slip + Friends "Challenge" pill):
    - Direct: challenger picks market + entry preset → challengee gets an inbox
      notification + Respond → accept creates a `match` (PENDING) through the
-     same lifecycle service (both confirm → escrow → activate). Same
-     `can_pair` checks as the queue **except** the 24 h repeat-pair cooldown is
-     relaxed for explicit friend challenges at demo-money MVP (flagged config;
-     revisit before real money — rematch is a core loop but also the collusion
-     surface).
+     same lifecycle service (both confirm → escrow → activate).
+   - **Collusion posture for friends** (launch plan §5.4 — friends are the #1
+     collusion vector; design for it): **rake-bearing contests between the
+     same pair are capped** (config: 3/day, 10/week — friends included);
+     beyond the cap, offer a **friendly**: unlimited, zero-rake,
+     leaderboard-excluded, entry refunded on settle. Controls bite the money
+     flow, not the fun. Friends may also play **across skill bands/forecast
+     windows** — allowed with honest disclosure on the card ("heavily
+     favored") instead of blocking; fairness protection exists for strangers,
+     consenting friends choose their own risk.
    - **Invite link**: `POST /challenges` without a challengee returns
      `invite_token` + URL (`/i/{token}`). Public preview page (market, entry,
      challenger name) → sign-in/sign-up → link required game → accept. This is

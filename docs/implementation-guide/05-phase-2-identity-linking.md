@@ -23,6 +23,13 @@ and ship the Profile screen. After this phase, "FACEIT/data extraction works."
        one process; worker and api each have their own);
      * CS:GO-legacy rejection, Dota Steam32-id handling, private-profile
        detection kept exactly as PoC (they encode hard-won edge cases);
+     * **Dota expose-data gate at link time** (launch plan §6.1): verify recent
+       matches are actually readable via OpenDota; if "Expose Public Match
+       Data" is off, block the link with instructions — never a silent
+       settlement failure later;
+     * **raw payload retention**: every host response that will feed a grading
+       or profile decision is persisted to `raw_payloads` and referenced from
+       the derived record (audit requirement — see `01-architecture.md` §2);
      * every adapter method logs host latency (structlog) for ops.
 2. Migration + service for **`linked_accounts`** (unique `(user_id, game)` and
    `(game, host_account_id)` — one host account per platform user, DB-enforced).
@@ -35,7 +42,15 @@ and ship the Profile screen. After this phase, "FACEIT/data extraction works."
    frozen binding), link flow (row → username input → server verify → LINKED),
    Limits rows (read from Phase 1), Self-exclude action (red).
 5. Onboarding step 3 ("link your first game") wired to the same link flow.
-6. `GET /health` reports registered games from the registry + flags.
+6. **Metric-model bootstrap** (`metric_models` — see `01-architecture.md` §2):
+   on link, pull the account's recent match history (last ~50 matches; keep the
+   raw payloads) and compute per-metric `mu`/`sigma`/`n` with recency weighting
+   (EWMA, half-life 10). Refresh hooks fire on settlement (Phase 3) and
+   nightly. **Provisional floors** (from the challenge-engine proposal §3/§6):
+   `n < 10` on a metric ⇒ no stat duels/pools on that metric; accounts below a
+   per-game history floor (e.g. 20 rated chess games / 25 FaceIt matches) get
+   H2H `win` markets only. Floors live in config, not code.
+7. `GET /health` reports registered games from the registry + flags.
 
 ## OAuth posture (MVP decision)
 

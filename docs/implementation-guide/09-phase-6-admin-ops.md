@@ -27,8 +27,19 @@ switch without a deploy.
      expiry rate.
    - **Flags:** toggle per-game enable, `queue_paused`, `settlement_paused`;
      edit `geo_config` state list.
-   - **Reconciliation:** `check_all()` on demand + last worker-run status; any
-     violating ref renders red with its ledger trail.
+   - **Reconciliation:** `check_all()` on demand (per-contest conservation +
+     global solvency) + last worker-run status; any violating ref renders red
+     with its ledger trail.
+   - **Risk view** (from the challenge-engine proposal §11/§15): per
+     (game, market/difficulty) — offered/accepted counts, **actual vs.
+     expected clear/win rates** (pools should track their `p_target`; duels
+     should sit near 50%), rake accrued, dispute count; alert rows when a rate
+     drifts beyond a threshold (a mispriced `k` or a systematic exploit looks
+     identical from here). Plus the flag queue: sandbagging flags (Phase 4
+     detector), abnormal win streaks, pair-cap breaches — each with
+     freeze/clear actions. Rule from the proposal, kept verbatim: risk
+     responses may adjust **future** formation/generation, never an accepted
+     in-flight contest.
 3. **Analytics (PostHog):**
    - Web: point the PoC's `track()` seam (`poc-reference/frontend/src/utils/telemetry.ts`
      event names — keep them stable) at PostHog; identify by user id after auth.

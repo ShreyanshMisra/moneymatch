@@ -10,6 +10,8 @@
 | Legal | [`legal/integrity-audit.md`](./legal/integrity-audit.md) | Threat model from the PoC audit — the integrity release gates |
 | Business | [`business/business-and-competition.md`](./business/business-and-competition.md) | Rake economics, competitive landscape, retention, liquidity plan |
 | Business | [`business/gtm-prelaunch.md`](./business/gtm-prelaunch.md) | Metrics, waitlist/community, referral mechanics |
+| Proposals | [`proposals/production-launch-plan-v3.md`](./proposals/production-launch-plan-v3.md) | Engineer's launch plan — matchmaking/pool/tournament fairness math adopted into the guide; Firebase/Stripe stack not adopted (see banner) |
+| Proposals | [`proposals/challenge-engine-workflow.md`](./proposals/challenge-engine-workflow.md) | Engineer's challenge-engine spec — profiles/audit/risk adopted; house-backed mode rejected (see banner) |
 | PoC | [`../poc-reference/POC-IMPLEMENTATION.md`](../poc-reference/POC-IMPLEMENTATION.md) | Ground truth of the PoC code mirrored in `/poc-reference` |
 
 **Invariants that never change, whichever doc you're in:** peer-to-peer /

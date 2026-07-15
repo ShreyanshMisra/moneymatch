@@ -20,6 +20,17 @@ Product/legal context (read once): [`docs/product/overview.md`](../product/overv
 [`docs/legal/integrity-audit.md`](../legal/integrity-audit.md).
 PoC ground truth: [`poc-reference/POC-IMPLEMENTATION.md`](../../poc-reference/POC-IMPLEMENTATION.md).
 
+Design inputs absorbed into this guide (read when working on matchmaking,
+pools, tournaments, or risk):
+[`docs/proposals/production-launch-plan-v3.md`](../proposals/production-launch-plan-v3.md)
+(duel-forecast pairing, personal-bar pool rooms, matchmade tournaments,
+failure-mode matrix, ledger chart of accounts — its Firebase/Stripe stack was
+**not** adopted) and
+[`docs/proposals/challenge-engine-workflow.md`](../proposals/challenge-engine-workflow.md)
+(player performance profiles, challenge immutability/audit, fraud signals,
+risk monitoring — its house-backed mode was **rejected**; see the banner on
+that doc).
+
 ---
 
 ## 1. What the MVP is

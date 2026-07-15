@@ -92,8 +92,11 @@ The design shows `×1.80` on markets and `×1.60/×2.40/×4.80` on pools. These 
   set per-player or per-outcome. Tooltip copy: "Both stake $10 · winner takes
   $18 · $2 platform fee."
 - Pools: the pot is entrant-funded and clearers **split the pool minus rake**;
-  the tier multiplier is an **estimate** derived from the expected clear rate
-  (`×1.60 ≈ (1 − rake) / est_clear_rate`, tuned per tier). UI copy must say
+  the tier multiplier is an **estimate** derived from the difficulty's design
+  clear rate (`×… ≈ (1 − rake) / p_target`). The tier cards' stat thresholds
+  are **personalized** — quoted from the viewer's own baseline
+  (`μ + k·σ`, see Phase 4), so two players see different numbers on the same
+  Easy card; the PDF's values are one player's view. UI copy must say
   "estimated payout — actual payout is your share of the pool." A fixed
   guaranteed multiplier would be house-banked and is prohibited
   (see `docs/product/overview.md` §10.4). Demo money softens this at MVP, but

@@ -77,19 +77,47 @@ varchars, FKs `ON DELETE RESTRICT` (nothing money-adjacent cascades).
   `amount_cents` (signed, applied to available), `escrow_delta_cents` (signed),
   `ref_type` (`match|solo_pool|tournament|admin|demo_rail`), `ref_id`,
   `balance_after_cents`, `memo`, `created_at`, `created_by`.
-- **platform_ledger** — same shape, wallet-less: rake income rows. Every
-  settlement writes rake here so `sum(payouts) + rake == sum(entries)` is
-  checkable from the DB alone.
+- **platform_ledger** — same shape, wallet-less, with an `account` column
+  (chart of accounts, from the production launch plan §3.1): `platform:rake`
+  (rake income) and `platform:promo` (funds every demo/signup credit, so promos
+  never mint value silently). Every settlement writes rake here so
+  `sum(payouts) + rake == sum(entries)` is checkable from the DB alone; the
+  promo account makes the **global solvency invariant** checkable too:
+  `sum(user available + escrow) == promo funding − rake` (demo money; at real
+  money the deposits/withdrawals terms join the equation).
 - **limits** (per user) — `daily_loss_cap_cents` (default $200), `daily_entry_cap_cents`
   (default $500), `max_concurrent_contests` (default 3), enforced **server-side**
   at escrow time (the PoC's `canJoin` tautology bug must not survive the port).
 
+### Skill & audit substrate (from the challenge-engine / launch-plan proposals)
+
+- **metric_models** — per `(user_id, game, metric)`: `mu`, `sigma`, `n`
+  (sample size), `updated_at` — an EWMA mean/std-dev of per-match values over
+  the last ~20 finished matches (half-life 10). Computed at link time,
+  refreshed on every settlement and nightly. `n < 10` ⇒ the metric is
+  **provisional** for that player (no stat duels or pool entries on it).
+  Metrics are **rate-based only** (K/D, ADR, HS%, KDA, GPM — the typed
+  allowlist); never raw totals, never anything outside the player's control.
+- **baseline snapshots** — every match player / pool entry / tournament entry
+  stores a `baseline_snapshot jsonb` (the metric model values used) **frozen at
+  escrow time**, so bars and pairings can't be manipulated between join and
+  play, and any dispute replays deterministically from stored inputs.
+- **raw_payloads** — every host-API response used in a grading decision is
+  persisted (`id`, `source`, `fetched_at`, `payload jsonb`, content hash) and
+  referenced from `matches.outcome_detail` / entry grading records. Grading
+  proof is an audit requirement, not a nicety.
+- Settlement records carry an `engine_version` string (matchmaking / grading /
+  bar-derivation versions) so disputes know exactly which rules produced a result.
+
 ### Play
 
-- **queue_tickets** — `id`, `user_id`, `game`, `market` (see §3.1), `speed`
-  (chess time control, nullable), `entry_cents`, `rating`, `state`
-  (`waiting|matched|canceled|expired`), `created_at`, `expires_at`.
-  Pairing runs in a transaction: lock compatible oldest ticket, create match.
+- **queue_tickets** — `id`, `user_id`, `game`, `product` (`duel|pool|tournament`),
+  `market` (see §3.1), `speed` (chess time control, nullable), `difficulty`
+  (pools), `entry_cents`, `rating`, `baseline_snapshot`, `personal_bar`
+  (pools), `tolerance_stage`, `state` (`waiting|matched|canceled|expired`),
+  `created_at`, `expires_at`.
+  Pairing runs in a transaction: lock compatible candidates, create the
+  match/room (match-on-write — a compatible pair/room forms in one round trip).
 - **matches** — `id`, `game`, `market`, `speed`, `entry_cents`, `rake_pct`,
   `pot_cents`, `prize_cents`, `rake_cents`, `state`
   (`PENDING → ACTIVE → AWAITING_RESULT → SETTLED | CANCELED | PUSHED`),
@@ -99,18 +127,20 @@ varchars, FKs `ON DELETE RESTRICT` (nothing money-adjacent cascades).
 - **match_players** — `match_id FK`, `user_id FK`, `linked_account_id FK`,
   `color` (chess), `play_url`, `confirmed_at`, `payout_cents`, `stat_line jsonb`
   (for stat-race markets: the graded K/D, ADR, HS% values shown in Activity).
-- **solo_pools** — `id`, `game`, `tier` (`easy|hard|brutal` — design language),
-  `standard jsonb` (list of `MetricTarget`s), `entry_cents`, `rake_pct`,
+- **solo_pools** — queue-matched rooms (see Phase 4): `id`, `game`, `metric`,
+  `difficulty` (`easy|medium|hard`), `room_bar` (server-derived average of
+  members' personal bars), `entry_cents`, `rake_pct`,
   `window_starts_at/ends_at`, `min_entrants`, `state`
-  (`OPEN → LOCKED → SETTLED | CANCELED`), `est_clear_rate`, totals.
-- **solo_entries** — `pool_id`, `user_id`, `linked_account_id`, `status`
+  (`OPEN → LOCKED → SETTLED | CANCELED`), totals.
+- **solo_entries** — `pool_id`, `user_id`, `linked_account_id`,
+  `personal_bar`, `baseline_snapshot`, `status`
   (`LOCKED|CLEARED|MISSED|REFUNDED`), `telemetry jsonb` (server-fetched),
-  `payout_cents`.
-- **tournaments / tournament_entries** — port of the PoC shapes with cents +
-  server scores: `format` (`leaderboard_pool` only at MVP — single-elim brackets
-  cut; see phase 4), `ranking_metric`, `higher_is_better`, `entry_cents`,
-  `prize_split jsonb`, `max/min_entrants`, window timestamps, entry `score`,
-  `rank`, `payout_cents`.
+  `raw_payload_id`, `payout_cents`.
+- **tournaments / tournament_entries** — matchmade single-metric rooms
+  (see Phase 4): `ranking_metric`, `entry_cents`, `prize_split jsonb`
+  (default 50/30/20), `field_size`/`min_field`, window timestamps; entries
+  carry `baseline_snapshot`, `score` (first-N average, server-graded), `rank`,
+  `payout_cents`. Single-elim brackets are cut from MVP.
 
 ### Social & ops
 
@@ -141,11 +171,19 @@ Per game, a small fixed list; **no free-form props** (legal guardrail):
 | Chess (`chess.lichess`) | `win_h2h` (brokered direct game), per time control | Brokered Lichess game between the two bound accounts; draw → push. |
 | Dota 2 (`dota2.opendota`) | `win_next`, `kda_ratio`, `gpm` | Next finished match after `matched_at`, within 24 h. |
 
-Stat-race markets between two players are **peer-to-peer** (both stake, better
-stat takes the pot minus rake) — this is the design's "K/D ratio · ×1.80" card.
-The `×1.80` is *derived*: `2 × entry × (1 − rake) / entry`. Never configured as
-an odds line. Unresolvable within the window (no qualifying match, private
-profile, host outage) → CANCELED, full refund, zero rake.
+Stat-race markets between two players are **peer-to-peer stat duels** (both
+stake, better stat takes the pot minus rake) — this is the design's
+"K/D ratio · ×1.80" card. The `×1.80` is *derived*: `2 × entry × (1 − rake) / entry`.
+Never configured as an odds line. Pairing fairness comes from the duel-forecast
+model (Phase 3): `P(a beats b) = Φ((μa − μb) / √(σa² + σb²))` held near 50/50,
+since equal stakes forbid handicaps. Unresolvable within the window (no
+qualifying match, private profile, host outage) → CANCELED, full refund, zero rake.
+
+Chess brokering detail (from the launch plan §6.1): the server creates a
+**Lichess open challenge restricted to the two linked usernames**
+(`POST /api/challenge/open` with `users=a,b`) — no OAuth needed at MVP, both
+players get the same link but only those two accounts can occupy the seats, and
+settlement grades **that specific game id** (no "next qualifying game" inference).
 
 ### 3.2 Money flows
 
@@ -175,9 +213,31 @@ Every cycle, in separate transactions per item:
    via adapter (server-side), grade, settle.
 3. `queue_tickets` past `expires_at` → `expired` (escrow was never taken for
    waiting tickets — escrow happens at match confirm).
-4. Reconciliation assertion: for the touched refs,
-   `sum(ledger payouts) + rake == sum(entries)`; on violation → mark
-   `settlement_paused` flag, alert Sentry, stop. **Fail closed.**
+4. Reconciliation assertions: per touched ref,
+   `sum(ledger payouts) + rake == sum(entries)`; nightly, the **global solvency
+   check** `sum(user available + escrow) == promo funding − rake`. On any
+   violation → set `settlement_paused`, alert Sentry, stop. **Fail closed.**
+
+### 3.4 Failure-mode matrix (every row needs a tested code path)
+
+Adapted from the production launch plan §6.2 — the unifying rule is the
+**watchdog principle**: every non-terminal state carries a max age, and expiry
+always resolves toward *refund*, never toward loss. No object is ever stuck; no
+cent is ever stranded in escrow.
+
+| Failure | Handling |
+| --- | --- |
+| Host API down / 5xx during settlement | Match stays `AWAITING_RESULT`; worker retries with backoff. Outage does not consume the window (`window_ends_at` extends by downtime). Beyond a 24 h hard ceiling → CANCELED, full refund. |
+| No qualifying game in the window | CANCELED, full refund, zero rake. |
+| Identical stats / chess draw / both-win | PUSH: full refund, zero rake. |
+| Opponent never plays (one-sided stat duel) | The player who played wins by forfeit, but **only after** the full window plus a disclosed grace period; the forfeit rule is printed on the slip before entry. |
+| Unlink / host ban mid-contract | Unlink is blocked while contests are in flight; a host cheat-ban pre-settlement → CANCELED + refund + risk flag. |
+| Double-join / double-confirm race | Transactional re-read; second actor fails cleanly. |
+| Worker double-fire | Idempotent transitions: no-op unless state is claimable; ledger service rejects a second payout for the same ref. |
+| Queue ticket / challenge orphaned | TTL + worker expiry → cancel + refund. |
+| Room/field never fills | Widening ladder exhausts → offer start-at-minimum or cancel + refund. Rooms never form below minimum. |
+| Room bar / pairing disputed post-settlement | `room_bar`, every `personal_bar`, and pairings replay deterministically from frozen `baseline_snapshot`s + `engine_version` — the audit is a pure-function re-run. |
+| Ledger drift / invariant breach | Reconciliation cron: alert + auto-flip kill switches. Fail closed. |
 
 ---
 

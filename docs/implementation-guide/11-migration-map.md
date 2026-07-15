@@ -47,6 +47,17 @@ never `import` from `poc-reference/`.
 | `frontend/src/index.css` | Token architecture (not values — new palette per design PDF) | 0 |
 | `tests/../conftest.py` | pytest path/fixture setup pattern | 0 |
 
+## 2b. Specified but never committed (build fresh from the proposals)
+
+The [production launch plan](../proposals/production-launch-plan-v3.md)
+references an `api/_lib/demo/` module (`demo/ledger.py` double-entry ledger,
+`demo/matcher.py` SkillMatcher, `demo/store.py`, `demo/routes.py`). **That code
+was never committed to the PoC repo** (verified across all branches) — it is
+not in `poc-reference/`. The concepts are implemented fresh: the ledger by
+Phase 1 (`wallet_service` + `ledger_entries`), the skill/metric models and
+matcher by Phases 2–4 (`metric_models`, duel-forecast pairing, room formation),
+from the specs in the proposal docs.
+
 ## 3. Do NOT migrate (deliberate)
 
 | PoC piece | Why |

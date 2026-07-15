@@ -49,10 +49,18 @@ integrity/ops bars the docs establish.
 
 ## E. Pools & tournaments
 
-- [ ] Enter an open CS2 pool; server-fetched telemetry grades it; clearers
-      split the pool minus rake; nobody-clears → full refund.
-- [ ] A leaderboard tournament runs a full window with live standings and
-      correct split payouts; under-min-entrants cancels with refunds.
+- [ ] Enter a CS2 pool queue; difficulty bars are quoted from your own
+      baseline; a room forms whose bar equals the rounded mean of members'
+      personal bars (shown with your delta); server-fetched telemetry grades
+      it; clearers split the pool minus rake; nobody-clears → full refund.
+- [ ] The composition predicate verifiably refuses an unfair room (shark /
+      outlier fixtures), and the tournament dispersion cap refuses a lopsided
+      field; no API accepts a user-supplied bar, room bar, or payout number.
+- [ ] Room bars and pairings replay deterministically from frozen baseline
+      snapshots (audit re-run on a settled room matches byte-for-byte).
+- [ ] A matchmade tournament runs a full window with live standings, first-N
+      scoring, and exact 50/30/20 payouts (tie case exercised);
+      under-min-field/`min_ranked` paths cancel with refunds.
 - [ ] Pool multiplier copy says "estimated"; payout equals share-of-pool.
 
 ## F. UI quality

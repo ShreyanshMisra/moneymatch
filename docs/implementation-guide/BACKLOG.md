@@ -18,3 +18,26 @@ one-line rationale. Seeded with known post-MVP work:
 - **Smurf floors** (min account age / rated games / non-provisional rating)
   before public launch.
 - **SSE for live surfaces** — replace polling where it hurts.
+
+From the [production launch plan](../proposals/production-launch-plan-v3.md)
+(adopted in spirit, deferred past MVP):
+
+- **Payment-processor application timing** — start the processor application /
+  underwriting conversation (Stripe restricted-business or a gaming PSP:
+  Nuvei/Paysafe/Aeropay/Trustly) **as soon as the public entity + domain
+  exist**; approval clocks run in months and require the counsel memo. The
+  `PaymentProvider` seam (Phase 7) is the code-side hedge if Stripe declines.
+- **Electron overlay rewire** — the launch plan §9 has a full plan (read-only
+  device token via `safeStorage`, `GET /overlay/active?game=`, contest-shaped
+  card, electron-builder distribution). Only after MVP, and only against the
+  new API.
+- **Directional value-flow monitoring** between account pairs (collusion/AML)
+  — pairs with the Phase-5 pair caps; needed before real money.
+- **Chargeback runbook + withdrawal holds** (48–72 h on fresh deposits) —
+  real-money items; the ledger `receivable` account concept lands with them.
+- **Z-scored tournament scoring** (`(score − μi)/σi` — performance relative to
+  your own baseline) — the config escape hatch if raw-value ranking shows the
+  top of the μ spread winning too often. Launch on raw value with a tight
+  dispersion cap; decide with data.
+- **Same-lobby CS2 friend duels** — friends who can join one FaceIt lobby get
+  the cleaner same-match objective (no cross-lobby variance) as a fast-follow.

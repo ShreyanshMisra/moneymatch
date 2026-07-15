@@ -14,23 +14,37 @@ This phase is the heart of the MVP.
 1. Migrations: `queue_tickets`, `matches`, `match_players`
    (per `01-architecture.md` §2), plus `markets` config (static Python config is
    fine — game → market defs with resolution rules; no DB needed).
-2. **Matchmaking service** — port the PoC queue logic
-   (`poc-reference/api/_lib/match_queue.py`) onto Postgres:
-   - Pairing rules unchanged: same `(game, market, speed, entry)`; rating within
-     a band that starts at 100 and widens 12/s to max 800 (constants in config);
-     oldest compatible ticket wins; idempotent re-poll.
-   - Transactionally: `SELECT … FOR UPDATE SKIP LOCKED` the candidate ticket,
-     create `match` (PENDING) + `match_players`, mark tickets matched. Two users
-     racing must never double-match (test this).
+2. **Matchmaking service** — the PoC queue skeleton
+   (`poc-reference/api/_lib/match_queue.py`) onto Postgres, with pairing
+   upgraded to the launch-plan §4.5(d) **duel-forecast model**:
+   - Hard compatibility: same `(game, market, speed, entry)`.
+   - **Eligibility** (stat duels): model each player's next-match performance
+     as an independent normal from their `metric_models` row, giving
+     `P(a beats b) = Φ((μa − μb) / √(σa² + σb²))`; pair only if
+     `P ∈ [0.5 − w, 0.5 + w]`. Chess `win_h2h` uses the rating band instead
+     (Elo already *is* the forecast; keep the PoC band + `win_expectancy`).
+   - **Selection** among eligible candidates: lowest composite score
+     `0.60·|μa − μb|/σ_pooled + 0.30·rating distance + 0.10·|σa − σb|/σ_pooled`
+     (the variance term avoids pairing a steady player with a boom-or-bust one).
+   - **Widening ladder** (config, queue-depth aware): `w = 0.05` for 0–30 s
+     → `0.10` to 2 min → `0.15` to 5 min; past that, offer keep-waiting /
+     cancel-refund. Chess band: 100 → widens 12/s → max 800 (PoC constants).
+   - Transactionally: `SELECT … FOR UPDATE SKIP LOCKED` candidates, create
+     `match` (PENDING) + `match_players` with **frozen `baseline_snapshot`s**,
+     mark tickets matched — match-on-write, no double-match under race (test it).
    - `can_pair` hook: reject self-pair (same user **or** same linked host
-     account) and same-pair-within-24h (query match history). This is the
-     anti-collusion seam — keep it one function.
+     account), same-pair-within-24h, and provisional metrics (`n < 10`). This
+     is the anti-collusion seam — keep it one function.
    - Ticket TTL (10 min) → expired by the worker; no escrow while waiting.
+   - The matched confirmation card shows the forecast honestly ("Even duel —
+     model gives you 52%") — the P2P analog of rake disclosure.
 3. **Match lifecycle service** (one transition per function, all transactional):
    - `confirm(match, user)` → escrow via `wallet_service.escrow_hold`. Both
-     confirmed → `activate`: chess → broker the Lichess challenge (port from the
-     PoC route; keep the color assignment); CS2/Dota → coordinated mode
-     ("play your next match") with `matched_at` stamped **server-side**.
+     confirmed → `activate`: chess → create a **Lichess open challenge
+     restricted to the two linked usernames** (`users=a,b` — only those two
+     accounts can take the seats; store the game id and settle **that game**,
+     not "next qualifying"); CS2/Dota → coordinated mode ("play your next
+     match") with `matched_at` stamped **server-side**.
    - `cancel/decline` (PENDING) and expiry (`window_ends_at`, 24 h) → refund
      both, no rake.
    - `settle(match, result)` → winner payout + rake row, or push → refund.
@@ -47,9 +61,16 @@ This phase is the heart of the MVP.
      each player's stat from their first finished match after `matched_at` via
      `norm_to_telemetry`; higher wins; equal → PUSH; store both stat lines in
      `match_players.stat_line` for the Activity UI.
-   - Any unresolvable state at window end → CANCELED + refund. Post-settle:
-     run `reconciliation_service.check(match)`; on failure set
-     `settlement_paused` and alert (fail closed).
+   - **Forfeit rule** (one-sided stat duel): if only one player produced a
+     qualifying match, they win — but only after the full window **plus a
+     disclosed grace period**; the rule is printed on the slip pre-entry.
+   - **Host outage** does not consume the window: extend `window_ends_at` by
+     the downtime, hard ceiling 24 h → CANCELED + refund (failure matrix,
+     `01-architecture.md` §3.4).
+   - Any other unresolvable state at window end → CANCELED + refund.
+     Settlement rows record `engine_version` and reference the `raw_payloads`
+     used. Post-settle: run `reconciliation_service.check(match)`; on failure
+     set `settlement_paused` and alert (fail closed).
 5. Endpoints: the `/play/*` set from `01-architecture.md` §4, including
    `GET /play/waiting` (open tickets of others, the design's "Waiting to play"
    list) and `POST /play/waiting/{ticket_id}/match` (take the other side
@@ -85,9 +106,12 @@ The worker must be running in `make dev` from this phase on.
 
 ## Tests required
 
-- Pairing: compatibility matrix (game/market/speed/entry/band), band widening
-  over time, oldest-first, self/same-host/24h-repeat rejection, race-safety
-  (two concurrent enqueues, one waiting ticket → exactly one match).
+- Pairing: compatibility matrix (game/market/speed/entry), forecast-window
+  eligibility (a pairing outside `0.5 ± w` cannot be formed, even via a crafted
+  direct-match request), ladder widening over time, composite-score selection,
+  self/same-host/24h-repeat/provisional rejection, race-safety (two concurrent
+  enqueues, one waiting ticket → exactly one match), baseline snapshots frozen
+  at escrow (later model refreshes don't alter an in-flight match).
 - Lifecycle: full happy path escrow math; decline/expiry refunds; double-confirm
   idempotent; confirm with insufficient balance fails and match stays PENDING.
 - Worker (adapter-mocked): each market's win/lose/push/unresolvable branch →
