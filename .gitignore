@@ -1,8 +1,10 @@
 # deps
 node_modules/
 .venv/
+venv/
 __pycache__/
 *.pyc
+.pnpm-store/
 
 # env & secrets
 .env

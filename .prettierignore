@@ -1,0 +1,7 @@
+node_modules/
+dist/
+build/
+poc-reference/
+packages/api-client/src/generated/
+pnpm-lock.yaml
+docs/design/*.pdf
