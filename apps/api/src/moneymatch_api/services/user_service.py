@@ -16,10 +16,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..auth import AuthedIdentity
 from ..errors import APIError
 from ..models.user import User
+from ..models.wallet import SIGNUP_GRANT_CENTS, Limit, Wallet
+from . import wallet_service
 
 
 async def get_or_create_user(session: AsyncSession, identity: AuthedIdentity) -> User:
-    """Resolve the user row for an identity, creating a minimal one if absent."""
+    """Resolve the user row for an identity, creating a minimal one if absent.
+
+    A freshly created user is provisioned with a DEMO wallet, default limits, and
+    the signup grant — all in the caller's transaction, so a new account either
+    lands fully set up or not at all.
+    """
     result = await session.execute(select(User).where(User.auth_id == identity.auth_id))
     user = result.scalar_one_or_none()
     if user is not None:
@@ -38,8 +45,32 @@ async def get_or_create_user(session: AsyncSession, identity: AuthedIdentity) ->
         result = await session.execute(
             select(User).where(User.auth_id == identity.auth_id)
         )
-        user = result.scalar_one()
+        return result.scalar_one()
+
+    await provision_new_user(session, user)
     return user
+
+
+async def provision_new_user(session: AsyncSession, user: User) -> Wallet:
+    """Create the DEMO wallet + default limits and post the signup grant.
+
+    The grant is a real `demo_deposit` ledger row funded from `platform:promo`
+    (memo "signup grant"), so demo money never appears from nowhere and the
+    global solvency invariant holds from the first row (04-phase-1 · deliverable 3).
+    """
+    wallet = Wallet(user_id=user.id, currency="DEMO")
+    session.add(wallet)
+    session.add(Limit(user_id=user.id))
+    await session.flush()
+
+    await wallet_service.demo_deposit(
+        session,
+        user.id,
+        SIGNUP_GRANT_CENTS,
+        memo="signup grant",
+        created_by=wallet_service.SYSTEM,
+    )
+    return wallet
 
 
 async def complete_onboarding(

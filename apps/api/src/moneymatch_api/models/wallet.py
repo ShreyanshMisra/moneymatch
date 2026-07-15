@@ -63,6 +63,10 @@ DEFAULT_DAILY_LOSS_CAP_CENTS = 20_000  # $200.00
 DEFAULT_DAILY_ENTRY_CAP_CENTS = 50_000  # $500.00
 DEFAULT_MAX_CONCURRENT_CONTESTS = 3
 
+# Demo signup credit, booked as a real ledger row funded from platform:promo —
+# not a magic starting balance (04-phase-1 · deliverable 3).
+SIGNUP_GRANT_CENTS = 100_000  # $1,000.00
+
 
 class Wallet(Base, TimestampMixin):
     __tablename__ = "wallets"
