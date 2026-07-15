@@ -20,11 +20,61 @@ from the validated PoC in the `clutchbook` repo.
 - [`poc-reference/`](./poc-reference/README.md) — frozen copy of the PoC's
   reusable code and tests. **Reference only:** port from it, never import it.
 
+## Running it locally
+
+Prerequisites: **Docker**, **Node 20+** with `pnpm` (via `corepack enable pnpm`),
+and [**uv**](https://docs.astral.sh/uv/) for the Python API.
+
+```bash
+# 1. Configure env (fill in the Supabase keys — see the Supabase note below).
+cp .env.example .env
+
+# 2. Install all dependencies (pnpm workspace + API venv).
+make install
+
+# 3. Start Postgres + API + web together.
+make dev
+```
+
+Then open http://localhost:5173, sign in with Google or email, complete
+onboarding (username + state + 18+), and land on the Play screen.
+
+Individual pieces (each reads the root `.env`):
+
+| Command                        | What it does                                      |
+| ------------------------------ | ------------------------------------------------- |
+| `make db`                      | Start Postgres (Docker) and wait until healthy    |
+| `make migrate`                 | Apply Alembic migrations                          |
+| `make api`                     | Run the FastAPI service on :8000 (reload)         |
+| `make web`                     | Run the Vite dev server on :5173                  |
+| `make test`                    | Run API (pytest) + web (vitest) suites            |
+| `make lint` / `make typecheck` | ruff/prettier + mypy/tsc                          |
+| `make gen-api`                 | Regenerate the TS API client from the running API |
+| `make help`                    | List all commands                                 |
+
+**Supabase:** create a project, enable Email + Google auth, and copy the project
+URL, JWT secret, and publishable/anon key into `.env` (`SUPABASE_*` and
+`VITE_SUPABASE_*`). The API verifies Supabase JWTs and owns all other state; the
+browser never touches the database.
+
+**Port note:** if `5432` is already taken, set `DB_PORT` in `.env` and update the
+port in `DATABASE_URL` to match.
+
+## Repo layout
+
+```
+apps/web            React + Vite SPA (talks only to the API)
+apps/api            FastAPI service (owns every number; verifies Supabase JWTs)
+packages/api-client Generated TypeScript client (OpenAPI → TS)
+docs/               Implementation guide, product, legal, design
+poc-reference/      Frozen PoC — reference only, never imported
+```
+
 ## Status
 
-Pre–Phase 0: documentation and migration baseline only. The application
-scaffold lands with Phase 0 of the implementation guide, which also owns the
-real run instructions that will replace this section.
+Phase 0 (foundation) complete: monorepo, CI, local Postgres, Supabase auth with
+server-side user provisioning, the app shell, and the sign-in/onboarding flow.
+Next: Phase 1 — wallet & ledger.
 
 ## Invariants (memorize these)
 
