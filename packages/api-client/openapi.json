@@ -103,7 +103,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OnboardingRequest"
+                "$ref": "#/components/schemas/UpdateMeRequest"
               }
             }
           }
@@ -131,10 +131,321 @@
           }
         }
       }
+    },
+    "/api/v1/me/self-exclude": {
+      "post": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Post Self Exclude",
+        "operationId": "post_self_exclude_api_v1_me_self_exclude_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/wallet": {
+      "get": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "Get Wallet",
+        "operationId": "get_wallet_api_v1_wallet_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalletResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/wallet/ledger": {
+      "get": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "Get Ledger",
+        "operationId": "get_ledger_api_v1_wallet_ledger_get",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalletLedgerPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/wallet/demo-deposit": {
+      "post": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "Demo Deposit",
+        "operationId": "demo_deposit_api_v1_wallet_demo_deposit_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemoDepositRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalletResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/wallet/demo-withdrawal": {
+      "post": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "Demo Withdrawal",
+        "operationId": "demo_withdrawal_api_v1_wallet_demo_withdrawal_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemoWithdrawalRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalletResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "DemoDepositRequest": {
+        "properties": {
+          "amount_preset_cents": {
+            "type": "integer",
+            "title": "Amount Preset Cents",
+            "description": "One of the presets: [1000, 2500, 5000, 10000]"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount_preset_cents"
+        ],
+        "title": "DemoDepositRequest",
+        "description": "Server-defined preset only \u2014 never an arbitrary client amount."
+      },
+      "DemoWithdrawalRequest": {
+        "properties": {
+          "amount_cents": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Amount Cents",
+            "description": "Cents; must be \u2264 available"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount_cents"
+        ],
+        "title": "DemoWithdrawalRequest"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -187,6 +498,125 @@
         ],
         "title": "HealthResponse"
       },
+      "LedgerEntryResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "entry_type": {
+            "type": "string",
+            "title": "Entry Type"
+          },
+          "amount_cents": {
+            "type": "integer",
+            "title": "Amount Cents"
+          },
+          "escrow_delta_cents": {
+            "type": "integer",
+            "title": "Escrow Delta Cents"
+          },
+          "ref_type": {
+            "type": "string",
+            "title": "Ref Type"
+          },
+          "ref_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref Id"
+          },
+          "balance_after_cents": {
+            "type": "integer",
+            "title": "Balance After Cents"
+          },
+          "memo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Memo"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "entry_type",
+          "amount_cents",
+          "escrow_delta_cents",
+          "ref_type",
+          "ref_id",
+          "balance_after_cents",
+          "memo",
+          "created_at"
+        ],
+        "title": "LedgerEntryResponse"
+      },
+      "LimitsResponse": {
+        "properties": {
+          "daily_loss_cap_cents": {
+            "type": "integer",
+            "title": "Daily Loss Cap Cents"
+          },
+          "daily_entry_cap_cents": {
+            "type": "integer",
+            "title": "Daily Entry Cap Cents"
+          },
+          "max_concurrent_contests": {
+            "type": "integer",
+            "title": "Max Concurrent Contests"
+          },
+          "pending_limits": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pending Limits"
+          },
+          "pending_effective_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pending Effective At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "daily_loss_cap_cents",
+          "daily_entry_cap_cents",
+          "max_concurrent_contests",
+          "pending_limits",
+          "pending_effective_at"
+        ],
+        "title": "LimitsResponse"
+      },
       "MeResponse": {
         "properties": {
           "user": {
@@ -195,6 +625,16 @@
           "needs_onboarding": {
             "type": "boolean",
             "title": "Needs Onboarding"
+          },
+          "limits": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LimitsResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -203,33 +643,73 @@
           "needs_onboarding"
         ],
         "title": "MeResponse",
-        "description": "`/me` payload: the user plus a computed onboarding flag."
+        "description": "`/me` payload: the user, a computed onboarding flag, and staking limits."
       },
-      "OnboardingRequest": {
+      "UpdateMeRequest": {
         "properties": {
           "username": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Username",
-            "description": "3\u201320 chars of [a-z0-9_]; set once"
+            "description": "3\u201320 chars [a-z0-9_]; once"
           },
           "residence_state": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Residence State",
-            "description": "2-letter US state code"
+            "description": "2-letter US state"
           },
           "dob_attested_18plus": {
-            "type": "boolean",
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Dob Attested 18Plus"
+          },
+          "daily_loss_cap_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Loss Cap Cents"
+          },
+          "daily_entry_cap_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Entry Cap Cents"
           }
         },
         "type": "object",
-        "required": [
-          "username",
-          "residence_state",
-          "dob_attested_18plus"
-        ],
-        "title": "OnboardingRequest",
-        "description": "Onboarding step 2: choose username + residence state + 18+ attestation."
+        "title": "UpdateMeRequest",
+        "description": "Onboarding (username + state + 18+, set once) and/or limit edits.\n\nAll fields optional so the endpoint serves both onboarding and later limit\nchanges. Lowering a cap is instant; raising is delayed (see limits_service)."
       },
       "UserResponse": {
         "properties": {
@@ -341,6 +821,72 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "WalletLedgerPage": {
+        "properties": {
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/LedgerEntryResponse"
+            },
+            "type": "array",
+            "title": "Entries"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "entries",
+          "next_cursor"
+        ],
+        "title": "WalletLedgerPage",
+        "description": "Cursor-paginated ledger. `next_cursor` is null on the last page."
+      },
+      "WalletResponse": {
+        "properties": {
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "available_cents": {
+            "type": "integer",
+            "title": "Available Cents"
+          },
+          "escrow_cents": {
+            "type": "integer",
+            "title": "Escrow Cents"
+          },
+          "lifetime_net_cents": {
+            "type": "integer",
+            "title": "Lifetime Net Cents"
+          },
+          "recent": {
+            "items": {
+              "$ref": "#/components/schemas/LedgerEntryResponse"
+            },
+            "type": "array",
+            "title": "Recent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "currency",
+          "available_cents",
+          "escrow_cents",
+          "lifetime_net_cents",
+          "recent"
+        ],
+        "title": "WalletResponse",
+        "description": "Balances + the most recent ledger rows (the Wallet screen's first paint)."
       }
     }
   }

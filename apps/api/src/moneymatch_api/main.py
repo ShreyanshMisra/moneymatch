@@ -17,7 +17,7 @@ from .config import Settings, get_settings
 from .db.session import dispose_engine
 from .errors import register_error_handlers
 from .logging import configure_logging
-from .routers import health, me
+from .routers import health, me, wallet
 
 log = structlog.get_logger(__name__)
 
@@ -67,6 +67,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.include_router(health.router, prefix=API_V1_PREFIX)
     app.include_router(me.router, prefix=API_V1_PREFIX)
+    app.include_router(wallet.router, prefix=API_V1_PREFIX)
 
     return app
 

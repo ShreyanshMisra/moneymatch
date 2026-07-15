@@ -24,23 +24,42 @@ class UserResponse(BaseModel):
     member_since: datetime
 
 
+class LimitsResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    daily_loss_cap_cents: int
+    daily_entry_cap_cents: int
+    max_concurrent_contests: int
+    pending_limits: dict | None
+    pending_effective_at: datetime | None
+
+
 class MeResponse(BaseModel):
-    """`/me` payload: the user plus a computed onboarding flag."""
+    """`/me` payload: the user, a computed onboarding flag, and staking limits."""
 
     user: UserResponse
     needs_onboarding: bool
+    limits: LimitsResponse | None = None
 
 
-class OnboardingRequest(BaseModel):
-    """Onboarding step 2: choose username + residence state + 18+ attestation."""
+class UpdateMeRequest(BaseModel):
+    """Onboarding (username + state + 18+, set once) and/or limit edits.
 
-    username: str = Field(..., description="3–20 chars of [a-z0-9_]; set once")
-    residence_state: str = Field(..., description="2-letter US state code")
-    dob_attested_18plus: bool
+    All fields optional so the endpoint serves both onboarding and later limit
+    changes. Lowering a cap is instant; raising is delayed (see limits_service).
+    """
+
+    username: str | None = Field(default=None, description="3–20 chars [a-z0-9_]; once")
+    residence_state: str | None = Field(default=None, description="2-letter US state")
+    dob_attested_18plus: bool | None = None
+    daily_loss_cap_cents: int | None = Field(default=None, gt=0)
+    daily_entry_cap_cents: int | None = Field(default=None, gt=0)
 
     @field_validator("username")
     @classmethod
-    def _validate_username(cls, v: str) -> str:
+    def _validate_username(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
         import re
 
         v = v.strip().lower()
@@ -53,7 +72,9 @@ class OnboardingRequest(BaseModel):
 
     @field_validator("residence_state")
     @classmethod
-    def _validate_state(cls, v: str) -> str:
+    def _validate_state(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
         import re
 
         v = v.strip().upper()

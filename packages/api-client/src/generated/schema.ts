@@ -39,10 +39,114 @@ export interface paths {
         patch: operations["update_me_api_v1_me_patch"];
         trace?: never;
     };
+    "/api/v1/me/self-exclude": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post Self Exclude */
+        post: operations["post_self_exclude_api_v1_me_self_exclude_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/wallet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Wallet */
+        get: operations["get_wallet_api_v1_wallet_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/wallet/ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Ledger */
+        get: operations["get_ledger_api_v1_wallet_ledger_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/wallet/demo-deposit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Demo Deposit */
+        post: operations["demo_deposit_api_v1_wallet_demo_deposit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/wallet/demo-withdrawal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Demo Withdrawal */
+        post: operations["demo_withdrawal_api_v1_wallet_demo_withdrawal_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * DemoDepositRequest
+         * @description Server-defined preset only — never an arbitrary client amount.
+         */
+        DemoDepositRequest: {
+            /**
+             * Amount Preset Cents
+             * @description One of the presets: [1000, 2500, 5000, 10000]
+             */
+            amount_preset_cents: number;
+        };
+        /** DemoWithdrawalRequest */
+        DemoWithdrawalRequest: {
+            /**
+             * Amount Cents
+             * @description Cents; must be ≤ available
+             */
+            amount_cents: number;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -63,32 +167,82 @@ export interface components {
                 [key: string]: boolean;
             };
         };
+        /** LedgerEntryResponse */
+        LedgerEntryResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Entry Type */
+            entry_type: string;
+            /** Amount Cents */
+            amount_cents: number;
+            /** Escrow Delta Cents */
+            escrow_delta_cents: number;
+            /** Ref Type */
+            ref_type: string;
+            /** Ref Id */
+            ref_id: string | null;
+            /** Balance After Cents */
+            balance_after_cents: number;
+            /** Memo */
+            memo: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** LimitsResponse */
+        LimitsResponse: {
+            /** Daily Loss Cap Cents */
+            daily_loss_cap_cents: number;
+            /** Daily Entry Cap Cents */
+            daily_entry_cap_cents: number;
+            /** Max Concurrent Contests */
+            max_concurrent_contests: number;
+            /** Pending Limits */
+            pending_limits: {
+                [key: string]: unknown;
+            } | null;
+            /** Pending Effective At */
+            pending_effective_at: string | null;
+        };
         /**
          * MeResponse
-         * @description `/me` payload: the user plus a computed onboarding flag.
+         * @description `/me` payload: the user, a computed onboarding flag, and staking limits.
          */
         MeResponse: {
             user: components["schemas"]["UserResponse"];
             /** Needs Onboarding */
             needs_onboarding: boolean;
+            limits?: components["schemas"]["LimitsResponse"] | null;
         };
         /**
-         * OnboardingRequest
-         * @description Onboarding step 2: choose username + residence state + 18+ attestation.
+         * UpdateMeRequest
+         * @description Onboarding (username + state + 18+, set once) and/or limit edits.
+         *
+         *     All fields optional so the endpoint serves both onboarding and later limit
+         *     changes. Lowering a cap is instant; raising is delayed (see limits_service).
          */
-        OnboardingRequest: {
+        UpdateMeRequest: {
             /**
              * Username
-             * @description 3–20 chars of [a-z0-9_]; set once
+             * @description 3–20 chars [a-z0-9_]; once
              */
-            username: string;
+            username?: string | null;
             /**
              * Residence State
-             * @description 2-letter US state code
+             * @description 2-letter US state
              */
-            residence_state: string;
+            residence_state?: string | null;
             /** Dob Attested 18Plus */
-            dob_attested_18plus: boolean;
+            dob_attested_18plus?: boolean | null;
+            /** Daily Loss Cap Cents */
+            daily_loss_cap_cents?: number | null;
+            /** Daily Entry Cap Cents */
+            daily_entry_cap_cents?: number | null;
         };
         /** UserResponse */
         UserResponse: {
@@ -127,6 +281,32 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /**
+         * WalletLedgerPage
+         * @description Cursor-paginated ledger. `next_cursor` is null on the last page.
+         */
+        WalletLedgerPage: {
+            /** Entries */
+            entries: components["schemas"]["LedgerEntryResponse"][];
+            /** Next Cursor */
+            next_cursor: string | null;
+        };
+        /**
+         * WalletResponse
+         * @description Balances + the most recent ledger rows (the Wallet screen's first paint).
+         */
+        WalletResponse: {
+            /** Currency */
+            currency: string;
+            /** Available Cents */
+            available_cents: number;
+            /** Escrow Cents */
+            escrow_cents: number;
+            /** Lifetime Net Cents */
+            lifetime_net_cents: number;
+            /** Recent */
+            recent: components["schemas"]["LedgerEntryResponse"][];
         };
     };
     responses: never;
@@ -199,7 +379,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["OnboardingRequest"];
+                "application/json": components["schemas"]["UpdateMeRequest"];
             };
         };
         responses: {
@@ -210,6 +390,171 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MeResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_self_exclude_api_v1_me_self_exclude_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_wallet_api_v1_wallet_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WalletResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_ledger_api_v1_wallet_ledger_get: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+            };
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WalletLedgerPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    demo_deposit_api_v1_wallet_demo_deposit_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DemoDepositRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WalletResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    demo_withdrawal_api_v1_wallet_demo_withdrawal_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DemoWithdrawalRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WalletResponse"];
                 };
             };
             /** @description Validation Error */
