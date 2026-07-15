@@ -1,0 +1,27 @@
+# deps
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# builds & caches
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.tsbuildinfo
+coverage/
+.coverage
+
+# tooling
+.DS_Store
+.idea/
+.vscode/
+playwright-report/
+test-results/
