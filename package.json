@@ -13,7 +13,7 @@
     "lint": "pnpm --filter @moneymatch/web lint",
     "typecheck": "pnpm --filter @moneymatch/web typecheck",
     "test": "pnpm --filter @moneymatch/web test",
-    "gen:api": "pnpm --filter @moneymatch/api-client gen"
+    "gen:api": "curl -sf ${API_BASE_URL:-http://localhost:8000}/openapi.json -o packages/api-client/openapi.json && pnpm --filter @moneymatch/api-client gen"
   },
   "devDependencies": {
     "prettier": "^3.3.3"

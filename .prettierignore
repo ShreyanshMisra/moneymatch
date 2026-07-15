@@ -3,5 +3,6 @@ dist/
 build/
 poc-reference/
 packages/api-client/src/generated/
+packages/api-client/openapi.json
 pnpm-lock.yaml
 docs/design/*.pdf
