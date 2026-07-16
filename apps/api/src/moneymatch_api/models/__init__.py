@@ -5,6 +5,8 @@ from ..db.base import Base
 from .admin_audit import AdminAudit
 from .feature_flag import FeatureFlag
 from .linked_account import LinkedAccount
+from .notification import Notification
+from .play import Match, MatchPlayer, QueueTicket
 from .skill import MetricModel, RawPayload
 from .user import User
 from .wallet import LedgerEntry, Limit, PlatformLedgerEntry, Wallet
@@ -21,4 +23,8 @@ __all__ = [
     "LinkedAccount",
     "MetricModel",
     "RawPayload",
+    "QueueTicket",
+    "Match",
+    "MatchPlayer",
+    "Notification",
 ]
