@@ -6,8 +6,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .. import __version__
+from ..adapters import registry
 from ..config import get_settings
-from ..constants import REGISTERED_GAMES
 from ..db.session import get_session
 from ..schemas.health import HealthResponse
 from ..services.feature_flags import get_boolean_flags
@@ -18,10 +18,13 @@ router = APIRouter(tags=["health"])
 @router.get("/health", response_model=HealthResponse)
 async def health(session: AsyncSession = Depends(get_session)) -> HealthResponse:
     settings = get_settings()
+    flags = await get_boolean_flags(session)
     return HealthResponse(
         status="ok",
         env=settings.env,
         version=__version__,
-        games=list(REGISTERED_GAMES),
-        flags=await get_boolean_flags(session),
+        # Registered games come from the adapter registry, filtered by flags —
+        # a disabled game:<id> flag drops the game here too (05-phase-2 · d.7).
+        games=registry.enabled_ids(flags),
+        flags=flags,
     )

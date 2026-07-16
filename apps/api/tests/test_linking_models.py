@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+
 import pytest
 from sqlalchemy import text
 from sqlalchemy.exc import DBAPIError, IntegrityError
@@ -9,6 +11,7 @@ from sqlalchemy.exc import DBAPIError, IntegrityError
 from moneymatch_api.models.linked_account import LinkedAccount
 from moneymatch_api.models.skill import RawPayload
 
+from .conftest import new_sessionmaker
 from .factories import create_user
 
 
@@ -49,6 +52,29 @@ async def test_second_game_links_independently(session):
     session.add(_link(user.id, game="chess.lichess", host_account_id="magnus"))
     session.add(_link(user.id, game="cs2.faceit", host_account_id="s1mple"))
     await session.flush()  # different games → both fine
+
+
+async def test_concurrent_race_for_host_account_one_winner(session):
+    """Two transactions racing to bind the same host account: the DB unique
+    index — not an app-level check — lets exactly one win."""
+    u1 = await create_user(session)
+    u2 = await create_user(session)
+    await session.commit()  # both users visible to the independent sessions
+
+    sm = new_sessionmaker()
+
+    async def _bind(user_id):
+        async with sm() as s:
+            s.add(_link(user_id, host_account_id="contested"))
+            try:
+                await s.commit()
+                return True
+            except IntegrityError:
+                await s.rollback()
+                return False
+
+    results = await asyncio.gather(_bind(u1.id), _bind(u2.id))
+    assert sorted(results) == [False, True]  # exactly one winner
 
 
 async def test_raw_payloads_are_append_only(session):
