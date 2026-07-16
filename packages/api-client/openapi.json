@@ -412,10 +412,253 @@
           }
         }
       }
+    },
+    "/api/v1/links": {
+      "get": {
+        "tags": [
+          "links"
+        ],
+        "summary": "List Links",
+        "operationId": "list_links_api_v1_links_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinksResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "links"
+        ],
+        "summary": "Create Link",
+        "operationId": "create_link_api_v1_links_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLinkRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinksResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/links/{game}/profile": {
+      "get": {
+        "tags": [
+          "links"
+        ],
+        "summary": "Refresh Link",
+        "operationId": "refresh_link_api_v1_links__game__profile_get",
+        "parameters": [
+          {
+            "name": "game",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Game"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinksResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/links/{game}": {
+      "delete": {
+        "tags": [
+          "links"
+        ],
+        "summary": "Delete Link",
+        "operationId": "delete_link_api_v1_links__game__delete",
+        "parameters": [
+          {
+            "name": "game",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Game"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinksResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "CreateLinkRequest": {
+        "properties": {
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "username": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Username"
+          }
+        },
+        "type": "object",
+        "required": [
+          "game",
+          "username"
+        ],
+        "title": "CreateLinkRequest",
+        "description": "Intent to bind a host account. The server fetches + verifies everything;\nthe client only names the game and the handle to claim."
+      },
       "DemoDepositRequest": {
         "properties": {
           "amount_preset_cents": {
@@ -445,6 +688,103 @@
           "amount_cents"
         ],
         "title": "DemoWithdrawalRequest"
+      },
+      "FormatStat": {
+        "properties": {
+          "speed": {
+            "type": "string",
+            "enum": [
+              "bullet",
+              "blitz",
+              "rapid",
+              "classical"
+            ],
+            "title": "Speed"
+          },
+          "rating": {
+            "type": "integer",
+            "title": "Rating"
+          },
+          "games": {
+            "type": "integer",
+            "title": "Games"
+          },
+          "provisional": {
+            "type": "boolean",
+            "title": "Provisional",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "speed",
+          "rating",
+          "games"
+        ],
+        "title": "FormatStat",
+        "description": "A single chess time-control's verified stats, sourced from the host."
+      },
+      "GameLink": {
+        "properties": {
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "LINKED",
+              "BLOCKED",
+              "UNLINKED"
+            ],
+            "title": "Status"
+          },
+          "host_username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Host Username"
+          },
+          "linked_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linked At"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfileSnapshot"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "game",
+          "display_name",
+          "status"
+        ],
+        "title": "GameLink",
+        "description": "One game's row on Profile: linked snapshot or an empty/blocked slot.\n\n`status`: LINKED (active binding), BLOCKED (game flag off or binding frozen),\nUNLINKED (available to link)."
       },
       "HTTPValidationError": {
         "properties": {
@@ -617,6 +957,23 @@
         ],
         "title": "LimitsResponse"
       },
+      "LinksResponse": {
+        "properties": {
+          "games": {
+            "items": {
+              "$ref": "#/components/schemas/GameLink"
+            },
+            "type": "array",
+            "title": "Games"
+          }
+        },
+        "type": "object",
+        "required": [
+          "games"
+        ],
+        "title": "LinksResponse",
+        "description": "Every registered game with the viewer's link state \u2014 drives Profile."
+      },
       "MeResponse": {
         "properties": {
           "user": {
@@ -644,6 +1001,139 @@
         ],
         "title": "MeResponse",
         "description": "`/me` payload: the user, a computed onboarding flag, and staking limits."
+      },
+      "ProfileSnapshot": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "link_method": {
+            "type": "string",
+            "enum": [
+              "username",
+              "oauth"
+            ],
+            "title": "Link Method"
+          },
+          "game": {
+            "type": "string",
+            "title": "Game",
+            "default": "chess.lichess"
+          },
+          "account_age_days": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Account Age Days"
+          },
+          "win_rate": {
+            "type": "number",
+            "title": "Win Rate"
+          },
+          "draw_rate": {
+            "type": "number",
+            "title": "Draw Rate",
+            "default": 0.0
+          },
+          "total_games": {
+            "type": "integer",
+            "title": "Total Games"
+          },
+          "formats": {
+            "items": {
+              "$ref": "#/components/schemas/FormatStat"
+            },
+            "type": "array",
+            "title": "Formats",
+            "default": []
+          },
+          "primary_speed": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "bullet",
+                  "blitz",
+                  "rapid",
+                  "classical"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary Speed"
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
+          },
+          "rank_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank Label"
+          },
+          "kd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kd"
+          },
+          "avatar_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avatar Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "display_name",
+          "url",
+          "link_method",
+          "win_rate",
+          "total_games"
+        ],
+        "title": "ProfileSnapshot",
+        "description": "Verified skill profile for one linked host account.\n\nChess populates the per-format / `primary_speed` fields; other titles leave\nthose empty and use the generic `rating` / `rank_label` / `kd` descriptors.\n`game` is the adapter id."
       },
       "UpdateMeRequest": {
         "properties": {

@@ -124,10 +124,73 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Links */
+        get: operations["list_links_api_v1_links_get"];
+        put?: never;
+        /** Create Link */
+        post: operations["create_link_api_v1_links_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/links/{game}/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Refresh Link */
+        get: operations["refresh_link_api_v1_links__game__profile_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/links/{game}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Link */
+        delete: operations["delete_link_api_v1_links__game__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * CreateLinkRequest
+         * @description Intent to bind a host account. The server fetches + verifies everything;
+         *     the client only names the game and the handle to claim.
+         */
+        CreateLinkRequest: {
+            /** Game */
+            game: string;
+            /** Username */
+            username: string;
+        };
         /**
          * DemoDepositRequest
          * @description Server-defined preset only — never an arbitrary client amount.
@@ -146,6 +209,49 @@ export interface components {
              * @description Cents; must be ≤ available
              */
             amount_cents: number;
+        };
+        /**
+         * FormatStat
+         * @description A single chess time-control's verified stats, sourced from the host.
+         */
+        FormatStat: {
+            /**
+             * Speed
+             * @enum {string}
+             */
+            speed: "bullet" | "blitz" | "rapid" | "classical";
+            /** Rating */
+            rating: number;
+            /** Games */
+            games: number;
+            /**
+             * Provisional
+             * @default false
+             */
+            provisional: boolean;
+        };
+        /**
+         * GameLink
+         * @description One game's row on Profile: linked snapshot or an empty/blocked slot.
+         *
+         *     `status`: LINKED (active binding), BLOCKED (game flag off or binding frozen),
+         *     UNLINKED (available to link).
+         */
+        GameLink: {
+            /** Game */
+            game: string;
+            /** Display Name */
+            display_name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "LINKED" | "BLOCKED" | "UNLINKED";
+            /** Host Username */
+            host_username?: string | null;
+            /** Linked At */
+            linked_at?: string | null;
+            profile?: components["schemas"]["ProfileSnapshot"] | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -210,6 +316,14 @@ export interface components {
             pending_effective_at: string | null;
         };
         /**
+         * LinksResponse
+         * @description Every registered game with the viewer's link state — drives Profile.
+         */
+        LinksResponse: {
+            /** Games */
+            games: components["schemas"]["GameLink"][];
+        };
+        /**
          * MeResponse
          * @description `/me` payload: the user, a computed onboarding flag, and staking limits.
          */
@@ -218,6 +332,58 @@ export interface components {
             /** Needs Onboarding */
             needs_onboarding: boolean;
             limits?: components["schemas"]["LimitsResponse"] | null;
+        };
+        /**
+         * ProfileSnapshot
+         * @description Verified skill profile for one linked host account.
+         *
+         *     Chess populates the per-format / `primary_speed` fields; other titles leave
+         *     those empty and use the generic `rating` / `rank_label` / `kd` descriptors.
+         *     `game` is the adapter id.
+         */
+        ProfileSnapshot: {
+            /** Username */
+            username: string;
+            /** Display Name */
+            display_name: string;
+            /** Url */
+            url: string;
+            /**
+             * Link Method
+             * @enum {string}
+             */
+            link_method: "username" | "oauth";
+            /**
+             * Game
+             * @default chess.lichess
+             */
+            game: string;
+            /** Account Age Days */
+            account_age_days?: number | null;
+            /** Win Rate */
+            win_rate: number;
+            /**
+             * Draw Rate
+             * @default 0
+             */
+            draw_rate: number;
+            /** Total Games */
+            total_games: number;
+            /**
+             * Formats
+             * @default []
+             */
+            formats: components["schemas"]["FormatStat"][];
+            /** Primary Speed */
+            primary_speed?: ("bullet" | "blitz" | "rapid" | "classical") | null;
+            /** Rating */
+            rating?: number | null;
+            /** Rank Label */
+            rank_label?: string | null;
+            /** Kd */
+            kd?: number | null;
+            /** Avatar Url */
+            avatar_url?: string | null;
         };
         /**
          * UpdateMeRequest
@@ -555,6 +721,138 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WalletResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_links_api_v1_links_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LinksResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_link_api_v1_links_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLinkRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LinksResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    refresh_link_api_v1_links__game__profile_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                game: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LinksResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_link_api_v1_links__game__delete: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                game: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LinksResponse"];
                 };
             };
             /** @description Validation Error */
