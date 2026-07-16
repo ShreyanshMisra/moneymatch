@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../auth/useAuth';
+import { LinkGames } from '../components/LinkGames';
 import { PillButton } from '../components/ui/PillButton';
 import { StepProgress } from '../components/ui/StepProgress';
 import { useMe } from '../hooks/useMe';
@@ -210,20 +211,20 @@ function OnboardingStep({ onDone }: { onDone: () => void }) {
 function LinkGameStep() {
   const navigate = useNavigate();
   return (
-    <div className="text-center">
-      <h1 className="text-xl font-semibold">Link your first game</h1>
-      <p className="mt-2 text-sm text-text-secondary">
-        Connect Chess, CS2, or Dota 2 to start playing. You can do this any time from
-        your profile.
+    <div>
+      <h1 className="text-center text-xl font-semibold">Link your first game</h1>
+      <p className="mt-2 text-center text-sm text-text-secondary">
+        Connect Chess, CS2, or Dota 2 to start playing — or do it later from your
+        profile.
       </p>
-      <div className="mt-8 flex flex-col gap-3">
+      <div className="mt-8">
+        <LinkGames />
+      </div>
+      <div className="mt-8">
         <PillButton variant="primary" fullWidth onClick={() => navigate('/play')}>
           Enter Money Match
         </PillButton>
       </div>
-      <p className="mt-3 text-xs text-text-tertiary">
-        Game linking arrives in Phase 2.
-      </p>
     </div>
   );
 }

@@ -34,9 +34,12 @@ api: ## Run the API (reload) on :8000
 web: ## Run the web app (Vite) on :5173
 	cd apps/web && pnpm dev
 
-dev: db migrate ## Start db + api + web together
-	@echo "starting api + web (Ctrl-C to stop)..."
-	@$(MAKE) -j2 api web
+worker: ## Run the settlement worker (polls Postgres; separate process)
+	cd apps/api && uv run --env-file ../../.env python -m moneymatch_api.workers.settlement_worker
+
+dev: db migrate ## Start db + api + worker + web together
+	@echo "starting api + worker + web (Ctrl-C to stop)..."
+	@$(MAKE) -j3 api worker web
 
 test: test-api test-web ## Run all tests
 
@@ -45,6 +48,10 @@ test-api: ## Run API tests (needs Postgres up)
 
 test-web: ## Run web tests
 	pnpm --filter @moneymatch/web test
+
+e2e: ## Run the Playwright H2H e2e (needs the stack up — see apps/web/e2e/README.md)
+	pnpm --filter @moneymatch/web exec playwright install --with-deps chromium
+	pnpm --filter @moneymatch/web test:e2e
 
 lint: ## Lint everything
 	cd apps/api && uv run ruff check src tests && uv run ruff format --check src tests

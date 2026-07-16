@@ -124,10 +124,276 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Links */
+        get: operations["list_links_api_v1_links_get"];
+        put?: never;
+        /** Create Link */
+        post: operations["create_link_api_v1_links_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/links/{game}/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Refresh Link */
+        get: operations["refresh_link_api_v1_links__game__profile_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/links/{game}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Link */
+        delete: operations["delete_link_api_v1_links__game__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/play/markets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Markets */
+        get: operations["get_markets_api_v1_play_markets_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/play/queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Join Queue */
+        post: operations["join_queue_api_v1_play_queue_post"];
+        /** Leave Queue */
+        delete: operations["leave_queue_api_v1_play_queue_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/play/queue/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Queue Status */
+        get: operations["queue_status_api_v1_play_queue_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/play/matches/{match_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Match */
+        get: operations["get_match_api_v1_play_matches__match_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/play/matches/{match_id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm Match */
+        post: operations["confirm_match_api_v1_play_matches__match_id__confirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/play/matches/{match_id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decline Match */
+        post: operations["decline_match_api_v1_play_matches__match_id__decline_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/play/waiting": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Waiting */
+        get: operations["get_waiting_api_v1_play_waiting_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/play/waiting/{ticket_id}/match": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Take Waiting */
+        post: operations["take_waiting_api_v1_play_waiting__ticket_id__match_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Activity */
+        get: operations["get_activity_api_v1_activity_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * ActivityItem
+         * @description One row in the unified Activity feed (H2H now; pools/tournaments in Phase 4).
+         */
+        ActivityItem: {
+            /** Type */
+            type: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Game */
+            game: string;
+            /** Market */
+            market: string;
+            /** Market Label */
+            market_label: string;
+            /** Kind */
+            kind: string;
+            /** State */
+            state: string;
+            /** Entry Cents */
+            entry_cents: number;
+            /** Net Cents */
+            net_cents: number | null;
+            /** Opponent Username */
+            opponent_username: string | null;
+            /** Your Stat Line */
+            your_stat_line: {
+                [key: string]: unknown;
+            } | null;
+            /** Opponent Stat Line */
+            opponent_stat_line: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Resolved At */
+            resolved_at: string | null;
+        };
+        /** ActivityResponse */
+        ActivityResponse: {
+            /** Items */
+            items: components["schemas"]["ActivityItem"][];
+        };
+        /**
+         * CreateLinkRequest
+         * @description Intent to bind a host account. The server fetches + verifies everything;
+         *     the client only names the game and the handle to claim.
+         */
+        CreateLinkRequest: {
+            /** Game */
+            game: string;
+            /** Username */
+            username: string;
+        };
         /**
          * DemoDepositRequest
          * @description Server-defined preset only — never an arbitrary client amount.
@@ -146,6 +412,62 @@ export interface components {
              * @description Cents; must be ≤ available
              */
             amount_cents: number;
+        };
+        /**
+         * Forecast
+         * @description The duel-forecast disclosure for a stat/chess pairing.
+         *
+         *     `you_win_prob` is `P(you beat opponent)` from the model (held near 0.50 by
+         *     the eligibility window); `label` is the honest one-liner for the matched card.
+         */
+        Forecast: {
+            /** You Win Prob */
+            you_win_prob: number;
+            /** Label */
+            label: string;
+        };
+        /**
+         * FormatStat
+         * @description A single chess time-control's verified stats, sourced from the host.
+         */
+        FormatStat: {
+            /**
+             * Speed
+             * @enum {string}
+             */
+            speed: "bullet" | "blitz" | "rapid" | "classical";
+            /** Rating */
+            rating: number;
+            /** Games */
+            games: number;
+            /**
+             * Provisional
+             * @default false
+             */
+            provisional: boolean;
+        };
+        /**
+         * GameLink
+         * @description One game's row on Profile: linked snapshot or an empty/blocked slot.
+         *
+         *     `status`: LINKED (active binding), BLOCKED (game flag off or binding frozen),
+         *     UNLINKED (available to link).
+         */
+        GameLink: {
+            /** Game */
+            game: string;
+            /** Display Name */
+            display_name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "LINKED" | "BLOCKED" | "UNLINKED";
+            /** Host Username */
+            host_username?: string | null;
+            /** Linked At */
+            linked_at?: string | null;
+            profile?: components["schemas"]["ProfileSnapshot"] | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -210,6 +532,123 @@ export interface components {
             pending_effective_at: string | null;
         };
         /**
+         * LinksResponse
+         * @description Every registered game with the viewer's link state — drives Profile.
+         */
+        LinksResponse: {
+            /** Games */
+            games: components["schemas"]["GameLink"][];
+        };
+        /**
+         * MarketRow
+         * @description One market row on the Play screen (design PDF p.1).
+         */
+        MarketRow: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Kind */
+            kind: string;
+            /** Metric */
+            metric: string | null;
+            /** Requires Speed */
+            requires_speed: boolean;
+            /** Speeds */
+            speeds: string[];
+            /** Multiplier Bps */
+            multiplier_bps: number;
+            /** Queue Depth */
+            queue_depth: number;
+            /** Provisional */
+            provisional: boolean;
+            /** Resolution Note */
+            resolution_note: string;
+        };
+        /** MarketsResponse */
+        MarketsResponse: {
+            /** Game */
+            game: string;
+            /** Linked */
+            linked: boolean;
+            /** Entry Presets Cents */
+            entry_presets_cents: number[];
+            /** Markets */
+            markets: components["schemas"]["MarketRow"][];
+        };
+        /** MatchPlayerView */
+        MatchPlayerView: {
+            /**
+             * User Id
+             * Format: uuid
+             */
+            user_id: string;
+            /** Username */
+            username: string | null;
+            /** Rating */
+            rating: number | null;
+            /** Color */
+            color: string | null;
+            /** Confirmed */
+            confirmed: boolean;
+            /** Payout Cents */
+            payout_cents: number;
+            /** Stat Line */
+            stat_line: {
+                [key: string]: unknown;
+            } | null;
+            /** Is You */
+            is_you: boolean;
+        };
+        /**
+         * MatchView
+         * @description A match as one participant sees it (design's matched / active slip).
+         */
+        MatchView: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Game */
+            game: string;
+            /** Market */
+            market: string;
+            /** Market Label */
+            market_label: string;
+            /** Kind */
+            kind: string;
+            /** Speed */
+            speed: string | null;
+            /** Entry Cents */
+            entry_cents: number;
+            /** Pot Cents */
+            pot_cents: number;
+            /** Prize Cents */
+            prize_cents: number;
+            /** Rake Cents */
+            rake_cents: number;
+            /** Multiplier Bps */
+            multiplier_bps: number;
+            /** State */
+            state: string;
+            /** Brokered */
+            brokered: boolean;
+            /** Host Game Id */
+            host_game_id: string | null;
+            /** Matched At */
+            matched_at: string | null;
+            /** Window Ends At */
+            window_ends_at: string | null;
+            /** Players */
+            players: components["schemas"]["MatchPlayerView"][];
+            /** You Confirmed */
+            you_confirmed: boolean;
+            /** Your Play Url */
+            your_play_url: string | null;
+            forecast: components["schemas"]["Forecast"] | null;
+        };
+        /**
          * MeResponse
          * @description `/me` payload: the user, a computed onboarding flag, and staking limits.
          */
@@ -218,6 +657,90 @@ export interface components {
             /** Needs Onboarding */
             needs_onboarding: boolean;
             limits?: components["schemas"]["LimitsResponse"] | null;
+        };
+        /**
+         * ProfileSnapshot
+         * @description Verified skill profile for one linked host account.
+         *
+         *     Chess populates the per-format / `primary_speed` fields; other titles leave
+         *     those empty and use the generic `rating` / `rank_label` / `kd` descriptors.
+         *     `game` is the adapter id.
+         */
+        ProfileSnapshot: {
+            /** Username */
+            username: string;
+            /** Display Name */
+            display_name: string;
+            /** Url */
+            url: string;
+            /**
+             * Link Method
+             * @enum {string}
+             */
+            link_method: "username" | "oauth";
+            /**
+             * Game
+             * @default chess.lichess
+             */
+            game: string;
+            /** Account Age Days */
+            account_age_days?: number | null;
+            /** Win Rate */
+            win_rate: number;
+            /**
+             * Draw Rate
+             * @default 0
+             */
+            draw_rate: number;
+            /** Total Games */
+            total_games: number;
+            /**
+             * Formats
+             * @default []
+             */
+            formats: components["schemas"]["FormatStat"][];
+            /** Primary Speed */
+            primary_speed?: ("bullet" | "blitz" | "rapid" | "classical") | null;
+            /** Rating */
+            rating?: number | null;
+            /** Rank Label */
+            rank_label?: string | null;
+            /** Kd */
+            kd?: number | null;
+            /** Avatar Url */
+            avatar_url?: string | null;
+        };
+        /**
+         * QueueRequest
+         * @description Join the queue. Ids + a server preset only — no amounts, no timestamps.
+         */
+        QueueRequest: {
+            /** Game */
+            game: string;
+            /** Market */
+            market: string;
+            /** Speed */
+            speed?: string | null;
+            /** Entry Preset Cents */
+            entry_preset_cents: number;
+        };
+        /**
+         * QueueStatusResponse
+         * @description Where the viewer stands: idle, searching (band + wait), or matched.
+         */
+        QueueStatusResponse: {
+            /** Status */
+            status: string;
+            match?: components["schemas"]["MatchView"] | null;
+            /** Waited Seconds */
+            waited_seconds?: number | null;
+            /** Tolerance Stage */
+            tolerance_stage?: number | null;
+            /**
+             * Can Cancel
+             * @default true
+             */
+            can_cancel: boolean;
         };
         /**
          * UpdateMeRequest
@@ -281,6 +804,38 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /** WaitingResponse */
+        WaitingResponse: {
+            /** Waiting */
+            waiting: components["schemas"]["WaitingRow"][];
+        };
+        /**
+         * WaitingRow
+         * @description An open ticket of another player (design's "Waiting to play" list).
+         */
+        WaitingRow: {
+            /**
+             * Ticket Id
+             * Format: uuid
+             */
+            ticket_id: string;
+            /** Game */
+            game: string;
+            /** Market */
+            market: string;
+            /** Market Label */
+            market_label: string;
+            /** Speed */
+            speed: string | null;
+            /** Entry Cents */
+            entry_cents: number;
+            /** Username */
+            username: string | null;
+            /** Rating */
+            rating: number | null;
+            /** Waited Seconds */
+            waited_seconds: number;
         };
         /**
          * WalletLedgerPage
@@ -555,6 +1110,466 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WalletResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_links_api_v1_links_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LinksResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_link_api_v1_links_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLinkRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LinksResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    refresh_link_api_v1_links__game__profile_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                game: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LinksResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_link_api_v1_links__game__delete: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                game: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LinksResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_markets_api_v1_play_markets_get: {
+        parameters: {
+            query: {
+                game: string;
+            };
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MarketsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    join_queue_api_v1_play_queue_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QueueRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QueueStatusResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    leave_queue_api_v1_play_queue_delete: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QueueStatusResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    queue_status_api_v1_play_queue_status_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QueueStatusResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_match_api_v1_play_matches__match_id__get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                match_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    confirm_match_api_v1_play_matches__match_id__confirm_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                match_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    decline_match_api_v1_play_matches__match_id__decline_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                match_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_waiting_api_v1_play_waiting_get: {
+        parameters: {
+            query?: {
+                game?: string | null;
+            };
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WaitingResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    take_waiting_api_v1_play_waiting__ticket_id__match_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                ticket_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_activity_api_v1_activity_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivityResponse"];
                 };
             };
             /** @description Validation Error */
