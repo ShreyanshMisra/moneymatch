@@ -634,10 +634,720 @@
           }
         }
       }
+    },
+    "/api/v1/play/markets": {
+      "get": {
+        "tags": [
+          "play"
+        ],
+        "summary": "Get Markets",
+        "operationId": "get_markets_api_v1_play_markets_get",
+        "parameters": [
+          {
+            "name": "game",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Game"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/play/queue": {
+      "post": {
+        "tags": [
+          "play"
+        ],
+        "summary": "Join Queue",
+        "operationId": "join_queue_api_v1_play_queue_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueueRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueStatusResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "play"
+        ],
+        "summary": "Leave Queue",
+        "operationId": "leave_queue_api_v1_play_queue_delete",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueStatusResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/play/queue/status": {
+      "get": {
+        "tags": [
+          "play"
+        ],
+        "summary": "Queue Status",
+        "operationId": "queue_status_api_v1_play_queue_status_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueStatusResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/play/matches/{match_id}": {
+      "get": {
+        "tags": [
+          "play"
+        ],
+        "summary": "Get Match",
+        "operationId": "get_match_api_v1_play_matches__match_id__get",
+        "parameters": [
+          {
+            "name": "match_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Match Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/play/matches/{match_id}/confirm": {
+      "post": {
+        "tags": [
+          "play"
+        ],
+        "summary": "Confirm Match",
+        "operationId": "confirm_match_api_v1_play_matches__match_id__confirm_post",
+        "parameters": [
+          {
+            "name": "match_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Match Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/play/matches/{match_id}/decline": {
+      "post": {
+        "tags": [
+          "play"
+        ],
+        "summary": "Decline Match",
+        "operationId": "decline_match_api_v1_play_matches__match_id__decline_post",
+        "parameters": [
+          {
+            "name": "match_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Match Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/play/waiting": {
+      "get": {
+        "tags": [
+          "play"
+        ],
+        "summary": "Get Waiting",
+        "operationId": "get_waiting_api_v1_play_waiting_get",
+        "parameters": [
+          {
+            "name": "game",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Game"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaitingResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/play/waiting/{ticket_id}/match": {
+      "post": {
+        "tags": [
+          "play"
+        ],
+        "summary": "Take Waiting",
+        "operationId": "take_waiting_api_v1_play_waiting__ticket_id__match_post",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Ticket Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activity": {
+      "get": {
+        "tags": [
+          "activity"
+        ],
+        "summary": "Get Activity",
+        "operationId": "get_activity_api_v1_activity_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "ActivityItem": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "market_label": {
+            "type": "string",
+            "title": "Market Label"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "entry_cents": {
+            "type": "integer",
+            "title": "Entry Cents"
+          },
+          "net_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Net Cents"
+          },
+          "opponent_username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Opponent Username"
+          },
+          "your_stat_line": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Your Stat Line"
+          },
+          "opponent_stat_line": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Opponent Stat Line"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "resolved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolved At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "game",
+          "market",
+          "market_label",
+          "kind",
+          "state",
+          "entry_cents",
+          "net_cents",
+          "opponent_username",
+          "your_stat_line",
+          "opponent_stat_line",
+          "created_at",
+          "resolved_at"
+        ],
+        "title": "ActivityItem",
+        "description": "One row in the unified Activity feed (H2H now; pools/tournaments in Phase 4)."
+      },
+      "ActivityResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ActivityItem"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "ActivityResponse"
+      },
       "CreateLinkRequest": {
         "properties": {
           "game": {
@@ -688,6 +1398,25 @@
           "amount_cents"
         ],
         "title": "DemoWithdrawalRequest"
+      },
+      "Forecast": {
+        "properties": {
+          "you_win_prob": {
+            "type": "number",
+            "title": "You Win Prob"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "you_win_prob",
+          "label"
+        ],
+        "title": "Forecast",
+        "description": "The duel-forecast disclosure for a stat/chess pairing.\n\n`you_win_prob` is `P(you beat opponent)` from the model (held near 0.50 by\nthe eligibility window); `label` is the honest one-liner for the matched card."
       },
       "FormatStat": {
         "properties": {
@@ -974,6 +1703,343 @@
         "title": "LinksResponse",
         "description": "Every registered game with the viewer's link state \u2014 drives Profile."
       },
+      "MarketRow": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "metric": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metric"
+          },
+          "requires_speed": {
+            "type": "boolean",
+            "title": "Requires Speed"
+          },
+          "speeds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Speeds"
+          },
+          "multiplier_bps": {
+            "type": "integer",
+            "title": "Multiplier Bps"
+          },
+          "queue_depth": {
+            "type": "integer",
+            "title": "Queue Depth"
+          },
+          "provisional": {
+            "type": "boolean",
+            "title": "Provisional"
+          },
+          "resolution_note": {
+            "type": "string",
+            "title": "Resolution Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "kind",
+          "metric",
+          "requires_speed",
+          "speeds",
+          "multiplier_bps",
+          "queue_depth",
+          "provisional",
+          "resolution_note"
+        ],
+        "title": "MarketRow",
+        "description": "One market row on the Play screen (design PDF p.1)."
+      },
+      "MarketsResponse": {
+        "properties": {
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "linked": {
+            "type": "boolean",
+            "title": "Linked"
+          },
+          "entry_presets_cents": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Entry Presets Cents"
+          },
+          "markets": {
+            "items": {
+              "$ref": "#/components/schemas/MarketRow"
+            },
+            "type": "array",
+            "title": "Markets"
+          }
+        },
+        "type": "object",
+        "required": [
+          "game",
+          "linked",
+          "entry_presets_cents",
+          "markets"
+        ],
+        "title": "MarketsResponse"
+      },
+      "MatchPlayerView": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
+          },
+          "color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Color"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed"
+          },
+          "payout_cents": {
+            "type": "integer",
+            "title": "Payout Cents"
+          },
+          "stat_line": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stat Line"
+          },
+          "is_you": {
+            "type": "boolean",
+            "title": "Is You"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "username",
+          "rating",
+          "color",
+          "confirmed",
+          "payout_cents",
+          "stat_line",
+          "is_you"
+        ],
+        "title": "MatchPlayerView"
+      },
+      "MatchView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "market_label": {
+            "type": "string",
+            "title": "Market Label"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "speed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed"
+          },
+          "entry_cents": {
+            "type": "integer",
+            "title": "Entry Cents"
+          },
+          "pot_cents": {
+            "type": "integer",
+            "title": "Pot Cents"
+          },
+          "prize_cents": {
+            "type": "integer",
+            "title": "Prize Cents"
+          },
+          "rake_cents": {
+            "type": "integer",
+            "title": "Rake Cents"
+          },
+          "multiplier_bps": {
+            "type": "integer",
+            "title": "Multiplier Bps"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "brokered": {
+            "type": "boolean",
+            "title": "Brokered"
+          },
+          "host_game_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Host Game Id"
+          },
+          "matched_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Matched At"
+          },
+          "window_ends_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Window Ends At"
+          },
+          "players": {
+            "items": {
+              "$ref": "#/components/schemas/MatchPlayerView"
+            },
+            "type": "array",
+            "title": "Players"
+          },
+          "you_confirmed": {
+            "type": "boolean",
+            "title": "You Confirmed"
+          },
+          "your_play_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Your Play Url"
+          },
+          "forecast": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Forecast"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "game",
+          "market",
+          "market_label",
+          "kind",
+          "speed",
+          "entry_cents",
+          "pot_cents",
+          "prize_cents",
+          "rake_cents",
+          "multiplier_bps",
+          "state",
+          "brokered",
+          "host_game_id",
+          "matched_at",
+          "window_ends_at",
+          "players",
+          "you_confirmed",
+          "your_play_url",
+          "forecast"
+        ],
+        "title": "MatchView",
+        "description": "A match as one participant sees it (design's matched / active slip)."
+      },
       "MeResponse": {
         "properties": {
           "user": {
@@ -1134,6 +2200,92 @@
         ],
         "title": "ProfileSnapshot",
         "description": "Verified skill profile for one linked host account.\n\nChess populates the per-format / `primary_speed` fields; other titles leave\nthose empty and use the generic `rating` / `rank_label` / `kd` descriptors.\n`game` is the adapter id."
+      },
+      "QueueRequest": {
+        "properties": {
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "speed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed"
+          },
+          "entry_preset_cents": {
+            "type": "integer",
+            "title": "Entry Preset Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "game",
+          "market",
+          "entry_preset_cents"
+        ],
+        "title": "QueueRequest",
+        "description": "Join the queue. Ids + a server preset only \u2014 no amounts, no timestamps."
+      },
+      "QueueStatusResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "match": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MatchView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "waited_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Waited Seconds"
+          },
+          "tolerance_stage": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tolerance Stage"
+          },
+          "can_cancel": {
+            "type": "boolean",
+            "title": "Can Cancel",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "QueueStatusResponse",
+        "description": "Where the viewer stands: idle, searching (band + wait), or matched."
       },
       "UpdateMeRequest": {
         "properties": {
@@ -1311,6 +2463,98 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "WaitingResponse": {
+        "properties": {
+          "waiting": {
+            "items": {
+              "$ref": "#/components/schemas/WaitingRow"
+            },
+            "type": "array",
+            "title": "Waiting"
+          }
+        },
+        "type": "object",
+        "required": [
+          "waiting"
+        ],
+        "title": "WaitingResponse"
+      },
+      "WaitingRow": {
+        "properties": {
+          "ticket_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Ticket Id"
+          },
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "market_label": {
+            "type": "string",
+            "title": "Market Label"
+          },
+          "speed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed"
+          },
+          "entry_cents": {
+            "type": "integer",
+            "title": "Entry Cents"
+          },
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
+          },
+          "waited_seconds": {
+            "type": "integer",
+            "title": "Waited Seconds"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ticket_id",
+          "game",
+          "market",
+          "market_label",
+          "speed",
+          "entry_cents",
+          "username",
+          "rating",
+          "waited_seconds"
+        ],
+        "title": "WaitingRow",
+        "description": "An open ticket of another player (design's \"Waiting to play\" list)."
       },
       "WalletLedgerPage": {
         "properties": {
