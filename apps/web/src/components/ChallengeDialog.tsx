@@ -78,7 +78,10 @@ export function ChallengeDialog({
       role="dialog"
       aria-modal="true"
     >
-      <div className="w-full max-w-md rounded-2xl bg-panel p-6" data-testid="challenge-dialog">
+      <div
+        className="w-full max-w-md rounded-2xl bg-panel p-6"
+        data-testid="challenge-dialog"
+      >
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-bold text-text">
             {friend ? `Challenge ${friend.username ?? 'friend'}` : 'Invite a friend'}
@@ -178,13 +181,18 @@ export function ChallengeDialog({
                     value={inviteUrl}
                     className="min-w-0 flex-1 rounded-lg border border-hairline bg-bg px-3 py-2 text-xs text-text"
                   />
-                  <PillButton onClick={copyLink}>{copied ? 'Copied' : 'Copy'}</PillButton>
+                  <PillButton onClick={copyLink}>
+                    {copied ? 'Copied' : 'Copy'}
+                  </PillButton>
                 </div>
               </div>
             ) : (
               <div className="mt-5 flex gap-2">
                 {friend && (
-                  <PillButton disabled={!ready || create.isPending} onClick={sendDirect}>
+                  <PillButton
+                    disabled={!ready || create.isPending}
+                    onClick={sendDirect}
+                  >
                     {create.isPending ? 'Sending…' : 'Send challenge'}
                   </PillButton>
                 )}

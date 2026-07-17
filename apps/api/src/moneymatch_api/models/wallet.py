@@ -24,6 +24,7 @@ from sqlalchemy import (
     CheckConstraint,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     String,
     Text,
@@ -121,6 +122,8 @@ class LedgerEntry(Base):
             "ref_type IN ('match', 'solo_pool', 'tournament', 'admin', 'demo_rail')",
             name="ck_ledger_ref_type",
         ),
+        # Contest money-trail lookups (admin, reconciliation) hit (ref_type, ref_id).
+        Index("ix_ledger_entries_ref", "ref_type", "ref_id"),
     )
 
     id = uuid_pk()

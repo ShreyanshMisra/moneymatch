@@ -5,10 +5,9 @@ import { renderWithProviders } from '../test/testUtils';
 import { LeaderboardPanel } from './LeaderboardPanel';
 
 vi.mock('../hooks/useLeaderboard', async () => {
-  const actual =
-    await vi.importActual<typeof import('../hooks/useLeaderboard')>(
-      '../hooks/useLeaderboard',
-    );
+  const actual = await vi.importActual<typeof import('../hooks/useLeaderboard')>(
+    '../hooks/useLeaderboard',
+  );
   return { ...actual, useLeaderboard: vi.fn() };
 });
 

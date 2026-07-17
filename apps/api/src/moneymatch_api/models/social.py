@@ -26,6 +26,7 @@ from sqlalchemy import (
     CheckConstraint,
     DateTime,
     ForeignKey,
+    Index,
     String,
     UniqueConstraint,
 )
@@ -91,6 +92,8 @@ class Challenge(Base, TimestampMixin):
             "(challengee_id IS NOT NULL) OR (invite_token IS NOT NULL)",
             name="ck_challenges_recipient",
         ),
+        # Inbox / history ordering scans by recency.
+        Index("ix_challenges_created_at", "created_at"),
     )
 
     id = uuid_pk()

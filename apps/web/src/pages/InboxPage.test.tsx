@@ -14,10 +14,7 @@ vi.mock('../hooks/useChallenges', () => ({
 }));
 
 import { useAcceptChallenge, useDeclineChallenge } from '../hooks/useChallenges';
-import {
-  useMarkNotificationsRead,
-  useNotifications,
-} from '../hooks/useNotifications';
+import { useMarkNotificationsRead, useNotifications } from '../hooks/useNotifications';
 
 const markMutate = vi.fn();
 const declineMutate = vi.fn();

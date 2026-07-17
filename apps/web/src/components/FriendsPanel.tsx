@@ -45,7 +45,9 @@ export function FriendsPanel() {
           Add
         </PillButton>
       </form>
-      {add.error && <p className="mt-2 text-xs text-red">{(add.error as Error).message}</p>}
+      {add.error && (
+        <p className="mt-2 text-xs text-red">{(add.error as Error).message}</p>
+      )}
       {data && (
         <p className="mt-2 text-xs text-text-secondary">
           Your friend code: <span className="text-text">{data.your_friend_code}</span>
@@ -74,7 +76,11 @@ export function FriendsPanel() {
           />
         ) : (
           data?.friends.map((f) => (
-            <FriendRow key={f.friendship_id} friend={f} onChallenge={setChallengeFriend} />
+            <FriendRow
+              key={f.friendship_id}
+              friend={f}
+              onChallenge={setChallengeFriend}
+            />
           ))
         )}
       </div>
@@ -95,7 +101,10 @@ export function FriendsPanel() {
       )}
 
       {challengeFriend && (
-        <ChallengeDialog friend={challengeFriend} onClose={() => setChallengeFriend(null)} />
+        <ChallengeDialog
+          friend={challengeFriend}
+          onClose={() => setChallengeFriend(null)}
+        />
       )}
     </div>
   );
@@ -105,10 +114,9 @@ function PresenceDot({ online }: { online: boolean }) {
   return (
     <span
       aria-label={online ? 'online' : 'offline'}
-      className={[
-        'h-2.5 w-2.5 rounded-full',
-        online ? 'bg-green' : 'bg-hairline',
-      ].join(' ')}
+      className={['h-2.5 w-2.5 rounded-full', online ? 'bg-green' : 'bg-hairline'].join(
+        ' ',
+      )}
     />
   );
 }

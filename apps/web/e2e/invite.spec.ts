@@ -37,7 +37,10 @@ test('invite link → fresh signup accepts → both confirm → settle → inbox
   await pageA.getByRole('tab', { name: 'Friends' }).click();
   // (Challenge dialog is reachable from a friend row or the invite entry point;
   // here we drive the invite-link creation and read back the copied URL.)
-  await pageA.getByRole('button', { name: /Invite|Copy invite link/ }).first().click();
+  await pageA
+    .getByRole('button', { name: /Invite|Copy invite link/ })
+    .first()
+    .click();
   await pageA.getByRole('button', { name: 'CS2' }).click();
   await pageA.getByText('K/D ratio').click();
   await pageA.getByRole('button', { name: '$10.00' }).click();

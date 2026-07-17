@@ -31,6 +31,7 @@ from sqlalchemy import (
     CheckConstraint,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     String,
     UniqueConstraint,
@@ -72,6 +73,8 @@ class QueueTicket(Base, TimestampMixin):
             name="ck_queue_tickets_state",
         ),
         CheckConstraint("entry_cents > 0", name="ck_queue_tickets_entry_pos"),
+        # Pairing scans compatible candidates by (game, market, tier, state).
+        Index("ix_queue_tickets_candidates", "game", "market", "entry_cents", "state"),
     )
 
     id = uuid_pk()
@@ -152,7 +155,11 @@ class Match(Base, TimestampMixin):
     prize_cents: Mapped[int] = mapped_column(BigInteger, nullable=False)
     rake_cents: Mapped[int] = mapped_column(BigInteger, nullable=False)
     state: Mapped[str] = mapped_column(
-        String(16), default="PENDING", server_default="PENDING", nullable=False
+        String(16),
+        default="PENDING",
+        server_default="PENDING",
+        nullable=False,
+        index=True,  # worker scans due matches by state → ix_matches_state
     )
     # True ⇒ the platform brokered the game (chess open challenge); the graded
     # host game id lands in `host_game_id`.

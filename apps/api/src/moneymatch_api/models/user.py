@@ -10,7 +10,7 @@ from __future__ import annotations
 import secrets
 from datetime import datetime
 
-from sqlalchemy import CheckConstraint, DateTime, String, func
+from sqlalchemy import CheckConstraint, DateTime, String, func, text
 from sqlalchemy.dialects.postgresql import CITEXT
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -18,6 +18,13 @@ from ..db.base import Base, TimestampMixin, uuid_pk
 
 USER_ROLES = ("user", "admin")
 USER_STATUSES = ("active", "frozen", "self_excluded")
+
+# SQL backfill/backstop for `friend_code` (mirrors migration 0006); Python owns
+# new rows via the `default` below. Postgres normalizes this function expression
+# on read, so `alembic check` skips its server-default comparison (migrations/env.py).
+_FRIEND_CODE_SERVER_DEFAULT = (
+    "('MM-' || upper(substr(md5(gen_random_uuid()::text), 1, 6)))"
+)
 
 # Friend-code alphabet: base32 minus the ambiguous glyphs (0/O, 1/I). A short,
 # immutable, shareable code (`MM-7F3K2Q`) so friends add each other without a
@@ -49,7 +56,11 @@ class User(Base, TimestampMixin):
     username: Mapped[str | None] = mapped_column(CITEXT(), unique=True, nullable=True)
     # Immutable shareable friend code (`MM-7F3K2Q`), minted at row creation.
     friend_code: Mapped[str] = mapped_column(
-        String(12), unique=True, default=gen_friend_code, nullable=False
+        String(12),
+        unique=True,
+        default=gen_friend_code,
+        server_default=text(_FRIEND_CODE_SERVER_DEFAULT),
+        nullable=False,
     )
     # Presence-lite heartbeat: green dot when active in the last 5 min (08-phase-5).
     last_seen_at: Mapped[datetime | None] = mapped_column(

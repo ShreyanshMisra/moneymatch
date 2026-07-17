@@ -88,9 +88,12 @@ export function useAcceptChallenge() {
   const invalidate = useInvalidate();
   return useMutation({
     mutationFn: async (challengeId: string): Promise<{ match_id: string }> => {
-      const { data, error } = await api.POST('/api/v1/challenges/{challenge_id}/accept', {
-        params: { path: { challenge_id: challengeId } },
-      });
+      const { data, error } = await api.POST(
+        '/api/v1/challenges/{challenge_id}/accept',
+        {
+          params: { path: { challenge_id: challengeId } },
+        },
+      );
       if (error) throw new Error(messageOf(error, 'Could not accept.'));
       return data as { match_id: string };
     },
@@ -133,9 +136,12 @@ export function useAcceptInvite() {
   const invalidate = useInvalidate();
   return useMutation({
     mutationFn: async (token: string): Promise<{ match_id: string }> => {
-      const { data, error } = await api.POST('/api/v1/challenges/token/{token}/accept', {
-        params: { path: { token } },
-      });
+      const { data, error } = await api.POST(
+        '/api/v1/challenges/token/{token}/accept',
+        {
+          params: { path: { token } },
+        },
+      );
       if (error) throw new Error(messageOf(error, 'Could not accept the invite.'));
       return data as { match_id: string };
     },

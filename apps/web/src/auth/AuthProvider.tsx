@@ -2,6 +2,7 @@ import type { Session } from '@supabase/supabase-js';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { supabase } from '../lib/supabase';
+import { identify, resetIdentity } from '../lib/telemetry';
 import { AuthContext, type AuthContextValue } from './authContext';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -11,10 +12,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
+      if (data.session) identify(data.session.user.id);
       setLoading(false);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
       setSession(next);
+      // Tie analytics to the user id after auth; drop it on sign-out so the
+      // activation funnel attributes to the right person (09-phase-6 · d.3).
+      if (next) identify(next.user.id);
+      else resetIdentity();
     });
     return () => sub.subscription.unsubscribe();
   }, []);

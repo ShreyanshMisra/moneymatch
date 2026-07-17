@@ -2687,10 +2687,1113 @@
           }
         }
       }
+    },
+    "/api/v1/admin/flags": {
+      "get": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "List Flags",
+        "operationId": "list_flags_api_v1_admin_flags_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlagsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/flags/{key}": {
+      "put": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Update Flag",
+        "operationId": "update_flag_api_v1_admin_flags__key__put",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Key"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFlagRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlagItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users": {
+      "get": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Search Users",
+        "operationId": "search_users_api_v1_admin_users_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{user_id}": {
+      "get": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "User Detail",
+        "operationId": "user_detail_api_v1_admin_users__user_id__get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{user_id}/freeze": {
+      "post": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Freeze User",
+        "operationId": "freeze_user_api_v1_admin_users__user_id__freeze_post",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{user_id}/unfreeze": {
+      "post": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Unfreeze User",
+        "operationId": "unfreeze_user_api_v1_admin_users__user_id__unfreeze_post",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{user_id}/adjust": {
+      "post": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Adjust User",
+        "operationId": "adjust_user_api_v1_admin_users__user_id__adjust_post",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/linked-accounts/{linked_account_id}/unbind": {
+      "post": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Unbind Linked Account",
+        "operationId": "unbind_linked_account_api_v1_admin_linked_accounts__linked_account_id__unbind_post",
+        "parameters": [
+          {
+            "name": "linked_account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Linked Account Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/ledger": {
+      "get": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "User Ledger",
+        "operationId": "user_ledger_api_v1_admin_ledger_get",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "user id",
+              "title": "User"
+            },
+            "description": "user id"
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminLedgerPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/contests": {
+      "get": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "List Contests",
+        "operationId": "list_contests_api_v1_admin_contests_get",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "State"
+            }
+          },
+          {
+            "name": "game",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Game"
+            }
+          },
+          {
+            "name": "ref_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ref Type"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminContestListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/contests/{ref_type}/{ref_id}": {
+      "get": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Contest Detail",
+        "operationId": "contest_detail_api_v1_admin_contests__ref_type___ref_id__get",
+        "parameters": [
+          {
+            "name": "ref_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ref Type"
+            }
+          },
+          {
+            "name": "ref_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Ref Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminContestDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/matches/{match_id}/resettle": {
+      "post": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Resettle Match",
+        "operationId": "resettle_match_api_v1_admin_matches__match_id__resettle_post",
+        "parameters": [
+          {
+            "name": "match_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Match Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResettleResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/matches/{match_id}/void": {
+      "post": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Void Match",
+        "operationId": "void_match_api_v1_admin_matches__match_id__void_post",
+        "parameters": [
+          {
+            "name": "match_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Match Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoidRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResettleResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/queue": {
+      "get": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Queue",
+        "operationId": "queue_api_v1_admin_queue_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/reconciliation": {
+      "get": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Reconciliation",
+        "operationId": "reconciliation_api_v1_admin_reconciliation_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReconciliationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/risk": {
+      "get": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Risk",
+        "operationId": "risk_api_v1_admin_risk_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/risk/flags/{flag_id}/clear": {
+      "post": {
+        "tags": [
+          "admin",
+          "admin"
+        ],
+        "summary": "Clear Flag",
+        "operationId": "clear_flag_api_v1_admin_risk_flags__flag_id__clear_post",
+        "parameters": [
+          {
+            "name": "flag_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Flag Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "ActionResult": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok",
+            "default": true
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "title": "ActionResult",
+        "description": "Generic confirmation for a mutating admin action."
+      },
       "ActivityItem": {
         "properties": {
           "type": {
@@ -2850,6 +3953,638 @@
         ],
         "title": "AddFriendRequest",
         "description": "Add by exact MoneyMatch username or immutable friend code (`MM-7F3K2Q`)."
+      },
+      "AdjustRequest": {
+        "properties": {
+          "amount_cents": {
+            "type": "integer",
+            "title": "Amount Cents",
+            "description": "Signed cents; positive credits."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount_cents",
+          "reason"
+        ],
+        "title": "AdjustRequest",
+        "description": "Manual ledger adjustment. Signed cents (credit/debit); reason required."
+      },
+      "AdminContestDetail": {
+        "properties": {
+          "ref_type": {
+            "type": "string",
+            "title": "Ref Type"
+          },
+          "ref_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Ref Id"
+          },
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "entry_cents": {
+            "type": "integer",
+            "title": "Entry Cents"
+          },
+          "pot_cents": {
+            "type": "integer",
+            "title": "Pot Cents"
+          },
+          "prize_cents": {
+            "type": "integer",
+            "title": "Prize Cents"
+          },
+          "rake_cents": {
+            "type": "integer",
+            "title": "Rake Cents"
+          },
+          "engine_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Engine Version"
+          },
+          "outcome_detail": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outcome Detail"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "resolved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolved At"
+          },
+          "participants": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Participants"
+          },
+          "ledger": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Ledger"
+          },
+          "platform_ledger": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Platform Ledger"
+          },
+          "reconciliation": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Reconciliation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ref_type",
+          "ref_id",
+          "game",
+          "market",
+          "state",
+          "entry_cents",
+          "pot_cents",
+          "prize_cents",
+          "rake_cents",
+          "engine_version",
+          "outcome_detail",
+          "created_at",
+          "resolved_at",
+          "participants",
+          "ledger",
+          "platform_ledger",
+          "reconciliation"
+        ],
+        "title": "AdminContestDetail"
+      },
+      "AdminContestListItem": {
+        "properties": {
+          "ref_type": {
+            "type": "string",
+            "title": "Ref Type"
+          },
+          "ref_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Ref Id"
+          },
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "entry_cents": {
+            "type": "integer",
+            "title": "Entry Cents"
+          },
+          "pot_cents": {
+            "type": "integer",
+            "title": "Pot Cents"
+          },
+          "participants": {
+            "type": "integer",
+            "title": "Participants"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "resolved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolved At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ref_type",
+          "ref_id",
+          "game",
+          "market",
+          "state",
+          "entry_cents",
+          "pot_cents",
+          "participants",
+          "created_at",
+          "resolved_at"
+        ],
+        "title": "AdminContestListItem"
+      },
+      "AdminContestListResponse": {
+        "properties": {
+          "contests": {
+            "items": {
+              "$ref": "#/components/schemas/AdminContestListItem"
+            },
+            "type": "array",
+            "title": "Contests"
+          }
+        },
+        "type": "object",
+        "required": [
+          "contests"
+        ],
+        "title": "AdminContestListResponse"
+      },
+      "AdminContestRow": {
+        "properties": {
+          "ref_type": {
+            "type": "string",
+            "title": "Ref Type"
+          },
+          "ref_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Ref Id"
+          },
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "entry_cents": {
+            "type": "integer",
+            "title": "Entry Cents"
+          },
+          "payout_cents": {
+            "type": "integer",
+            "title": "Payout Cents"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "resolved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolved At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ref_type",
+          "ref_id",
+          "game",
+          "market",
+          "state",
+          "entry_cents",
+          "payout_cents",
+          "created_at",
+          "resolved_at"
+        ],
+        "title": "AdminContestRow",
+        "description": "A contest the user took part in (unified across match/pool/tournament)."
+      },
+      "AdminLedgerPage": {
+        "properties": {
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/LedgerEntryResponse"
+            },
+            "type": "array",
+            "title": "Entries"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "entries",
+          "next_cursor"
+        ],
+        "title": "AdminLedgerPage"
+      },
+      "AdminLimits": {
+        "properties": {
+          "daily_loss_cap_cents": {
+            "type": "integer",
+            "title": "Daily Loss Cap Cents"
+          },
+          "daily_entry_cap_cents": {
+            "type": "integer",
+            "title": "Daily Entry Cap Cents"
+          },
+          "max_concurrent_contests": {
+            "type": "integer",
+            "title": "Max Concurrent Contests"
+          }
+        },
+        "type": "object",
+        "required": [
+          "daily_loss_cap_cents",
+          "daily_entry_cap_cents",
+          "max_concurrent_contests"
+        ],
+        "title": "AdminLimits"
+      },
+      "AdminLinkedAccount": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "host_username": {
+            "type": "string",
+            "title": "Host Username"
+          },
+          "host_account_id": {
+            "type": "string",
+            "title": "Host Account Id"
+          },
+          "link_method": {
+            "type": "string",
+            "title": "Link Method"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "game",
+          "host_username",
+          "host_account_id",
+          "link_method",
+          "status"
+        ],
+        "title": "AdminLinkedAccount"
+      },
+      "AdminUserDetail": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "auth_id": {
+            "type": "string",
+            "title": "Auth Id"
+          },
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "friend_code": {
+            "type": "string",
+            "title": "Friend Code"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "residence_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Residence State"
+          },
+          "dob_attested_18plus": {
+            "type": "boolean",
+            "title": "Dob Attested 18Plus"
+          },
+          "member_since": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Member Since"
+          },
+          "last_seen_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Seen At"
+          },
+          "available_cents": {
+            "type": "integer",
+            "title": "Available Cents"
+          },
+          "escrow_cents": {
+            "type": "integer",
+            "title": "Escrow Cents"
+          },
+          "lifetime_net_cents": {
+            "type": "integer",
+            "title": "Lifetime Net Cents"
+          },
+          "limits": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AdminLimits"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "linked_accounts": {
+            "items": {
+              "$ref": "#/components/schemas/AdminLinkedAccount"
+            },
+            "type": "array",
+            "title": "Linked Accounts"
+          },
+          "contests": {
+            "items": {
+              "$ref": "#/components/schemas/AdminContestRow"
+            },
+            "type": "array",
+            "title": "Contests"
+          },
+          "recent_ledger": {
+            "items": {
+              "$ref": "#/components/schemas/LedgerEntryResponse"
+            },
+            "type": "array",
+            "title": "Recent Ledger"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "auth_id",
+          "username",
+          "email",
+          "friend_code",
+          "role",
+          "status",
+          "residence_state",
+          "dob_attested_18plus",
+          "member_since",
+          "last_seen_at",
+          "available_cents",
+          "escrow_cents",
+          "lifetime_net_cents",
+          "limits",
+          "linked_accounts",
+          "contests",
+          "recent_ledger"
+        ],
+        "title": "AdminUserDetail"
+      },
+      "AdminUserListResponse": {
+        "properties": {
+          "users": {
+            "items": {
+              "$ref": "#/components/schemas/AdminUserSummary"
+            },
+            "type": "array",
+            "title": "Users"
+          }
+        },
+        "type": "object",
+        "required": [
+          "users"
+        ],
+        "title": "AdminUserListResponse"
+      },
+      "AdminUserSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "friend_code": {
+            "type": "string",
+            "title": "Friend Code"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "residence_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Residence State"
+          },
+          "member_since": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Member Since"
+          },
+          "available_cents": {
+            "type": "integer",
+            "title": "Available Cents"
+          },
+          "escrow_cents": {
+            "type": "integer",
+            "title": "Escrow Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "username",
+          "email",
+          "friend_code",
+          "role",
+          "status",
+          "residence_state",
+          "member_since",
+          "available_cents",
+          "escrow_cents"
+        ],
+        "title": "AdminUserSummary",
+        "description": "A row in the users table (search results / list)."
       },
       "ChallengeAcceptResponse": {
         "properties": {
@@ -3247,6 +4982,45 @@
         "title": "DifficultyCard",
         "description": "One difficulty quoted from the viewer's own baseline (design PDF p.4)."
       },
+      "FlagItem": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Payload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "enabled"
+        ],
+        "title": "FlagItem"
+      },
+      "FlagsResponse": {
+        "properties": {
+          "flags": {
+            "items": {
+              "$ref": "#/components/schemas/FlagItem"
+            },
+            "type": "array",
+            "title": "Flags"
+          }
+        },
+        "type": "object",
+        "required": [
+          "flags"
+        ],
+        "title": "FlagsResponse"
+      },
       "Forecast": {
         "properties": {
           "you_win_prob": {
@@ -3478,6 +5252,9 @@
             },
             "type": "object",
             "title": "Flags"
+          },
+          "worker": {
+            "$ref": "#/components/schemas/WorkerHealth"
           }
         },
         "type": "object",
@@ -3486,7 +5263,8 @@
           "env",
           "version",
           "games",
-          "flags"
+          "flags",
+          "worker"
         ],
         "title": "HealthResponse"
       },
@@ -4662,6 +6440,39 @@
         "title": "ProfileSnapshot",
         "description": "Verified skill profile for one linked host account.\n\nChess populates the per-format / `primary_speed` fields; other titles leave\nthose empty and use the generic `rating` / `rank_label` / `kd` descriptors.\n`game` is the adapter id."
       },
+      "QueueDepthRow": {
+        "properties": {
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "entry_cents": {
+            "type": "integer",
+            "title": "Entry Cents"
+          },
+          "waiting": {
+            "type": "integer",
+            "title": "Waiting"
+          },
+          "avg_wait_seconds": {
+            "type": "number",
+            "title": "Avg Wait Seconds"
+          }
+        },
+        "type": "object",
+        "required": [
+          "game",
+          "market",
+          "entry_cents",
+          "waiting",
+          "avg_wait_seconds"
+        ],
+        "title": "QueueDepthRow"
+      },
       "QueueRequest": {
         "properties": {
           "game": {
@@ -4696,6 +6507,47 @@
         ],
         "title": "QueueRequest",
         "description": "Join the queue. Ids + a server preset only \u2014 no amounts, no timestamps."
+      },
+      "QueueResponse": {
+        "properties": {
+          "waiting": {
+            "type": "integer",
+            "title": "Waiting"
+          },
+          "matched": {
+            "type": "integer",
+            "title": "Matched"
+          },
+          "expired": {
+            "type": "integer",
+            "title": "Expired"
+          },
+          "canceled": {
+            "type": "integer",
+            "title": "Canceled"
+          },
+          "expiry_rate": {
+            "type": "number",
+            "title": "Expiry Rate"
+          },
+          "depth": {
+            "items": {
+              "$ref": "#/components/schemas/QueueDepthRow"
+            },
+            "type": "array",
+            "title": "Depth"
+          }
+        },
+        "type": "object",
+        "required": [
+          "waiting",
+          "matched",
+          "expired",
+          "canceled",
+          "expiry_rate",
+          "depth"
+        ],
+        "title": "QueueResponse"
       },
       "QueueStatusResponse": {
         "properties": {
@@ -4747,6 +6599,260 @@
         ],
         "title": "QueueStatusResponse",
         "description": "Where the viewer stands: idle, searching (band + wait), or matched."
+      },
+      "ReconViolationRow": {
+        "properties": {
+          "ref_type": {
+            "type": "string",
+            "title": "Ref Type"
+          },
+          "ref_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Ref Id"
+          },
+          "violations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Violations"
+          },
+          "totals": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Totals"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ref_type",
+          "ref_id",
+          "violations",
+          "totals"
+        ],
+        "title": "ReconViolationRow"
+      },
+      "ReconciliationResponse": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok"
+          },
+          "solvency_ok": {
+            "type": "boolean",
+            "title": "Solvency Ok"
+          },
+          "solvency_violations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Solvency Violations"
+          },
+          "totals": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Totals"
+          },
+          "contest_violations": {
+            "items": {
+              "$ref": "#/components/schemas/ReconViolationRow"
+            },
+            "type": "array",
+            "title": "Contest Violations"
+          },
+          "worker": {
+            "$ref": "#/components/schemas/WorkerStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ok",
+          "solvency_ok",
+          "solvency_violations",
+          "totals",
+          "contest_violations",
+          "worker"
+        ],
+        "title": "ReconciliationResponse"
+      },
+      "ResettleResult": {
+        "properties": {
+          "outcome": {
+            "type": "string",
+            "title": "Outcome"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          }
+        },
+        "type": "object",
+        "required": [
+          "outcome",
+          "state"
+        ],
+        "title": "ResettleResult"
+      },
+      "RiskFlagRow": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          },
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "metric": {
+            "type": "string",
+            "title": "Metric"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "detail": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Detail"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "username",
+          "game",
+          "metric",
+          "kind",
+          "detail",
+          "created_at"
+        ],
+        "title": "RiskFlagRow"
+      },
+      "RiskRateRow": {
+        "properties": {
+          "game": {
+            "type": "string",
+            "title": "Game"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "offered": {
+            "type": "integer",
+            "title": "Offered"
+          },
+          "accepted": {
+            "type": "integer",
+            "title": "Accepted"
+          },
+          "settled": {
+            "type": "integer",
+            "title": "Settled"
+          },
+          "expected_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Rate"
+          },
+          "actual_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actual Rate"
+          },
+          "rake_cents": {
+            "type": "integer",
+            "title": "Rake Cents"
+          },
+          "dispute_count": {
+            "type": "integer",
+            "title": "Dispute Count"
+          },
+          "alert": {
+            "type": "boolean",
+            "title": "Alert"
+          }
+        },
+        "type": "object",
+        "required": [
+          "game",
+          "market",
+          "offered",
+          "accepted",
+          "settled",
+          "expected_rate",
+          "actual_rate",
+          "rake_cents",
+          "dispute_count",
+          "alert"
+        ],
+        "title": "RiskRateRow"
+      },
+      "RiskResponse": {
+        "properties": {
+          "rates": {
+            "items": {
+              "$ref": "#/components/schemas/RiskRateRow"
+            },
+            "type": "array",
+            "title": "Rates"
+          },
+          "flags": {
+            "items": {
+              "$ref": "#/components/schemas/RiskFlagRow"
+            },
+            "type": "array",
+            "title": "Flags"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rates",
+          "flags"
+        ],
+        "title": "RiskResponse"
       },
       "StandingRow": {
         "properties": {
@@ -5129,6 +7235,36 @@
         ],
         "title": "TournamentsListResponse"
       },
+      "UpdateFlagRequest": {
+        "properties": {
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enabled"
+          },
+          "payload": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payload"
+          }
+        },
+        "type": "object",
+        "title": "UpdateFlagRequest",
+        "description": "Patch a flag: toggle `enabled` and/or replace its `payload` (e.g.\n`geo_config`'s excluded-state list). At least one field must be present."
+      },
       "UpdateMeRequest": {
         "properties": {
           "username": {
@@ -5311,6 +7447,20 @@
         ],
         "title": "ValidationError"
       },
+      "VoidRequest": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reason"
+        ],
+        "title": "VoidRequest"
+      },
       "WaitingResponse": {
         "properties": {
           "waiting": {
@@ -5468,6 +7618,58 @@
         ],
         "title": "WalletResponse",
         "description": "Balances + the most recent ledger rows (the Wallet screen's first paint)."
+      },
+      "WorkerHealth": {
+        "properties": {
+          "heartbeat_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heartbeat At"
+          },
+          "stale": {
+            "type": "boolean",
+            "title": "Stale"
+          }
+        },
+        "type": "object",
+        "required": [
+          "heartbeat_at",
+          "stale"
+        ],
+        "title": "WorkerHealth"
+      },
+      "WorkerStatus": {
+        "properties": {
+          "heartbeat_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heartbeat At"
+          },
+          "stale": {
+            "type": "boolean",
+            "title": "Stale"
+          }
+        },
+        "type": "object",
+        "required": [
+          "heartbeat_at",
+          "stale"
+        ],
+        "title": "WorkerStatus"
       },
       "YouSummaryView": {
         "properties": {
