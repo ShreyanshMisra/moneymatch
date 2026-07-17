@@ -8,10 +8,10 @@ import { statValue, useActivity, type ActivityItem } from '../hooks/useActivity'
 
 const LIVE_STATES = new Set(['ACTIVE', 'AWAITING_RESULT']);
 
-/** Won matches and live matches get the green dot; everything settled is gray. */
+/** A win or a live contest gets the green dot; everything settled is gray. */
 function dotClass(item: ActivityItem): string {
   const won = item.state === 'SETTLED' && (item.net_cents ?? 0) > 0;
-  const live = LIVE_STATES.has(item.state);
+  const live = LIVE_STATES.has(item.state) || item.state === 'LOCKED';
   return won || live ? 'bg-green' : 'bg-text-secondary';
 }
 
@@ -21,17 +21,24 @@ function stateLabel(item: ActivityItem): string {
       return 'Awaiting confirmation';
     case 'ACTIVE':
     case 'AWAITING_RESULT':
+    case 'OPEN':
+    case 'LOCKED':
       return 'In progress';
     case 'PUSHED':
       return 'Push · refunded';
     case 'CANCELED':
       return 'Refunded';
     case 'SETTLED':
-      return (item.net_cents ?? 0) > 0 ? 'Won' : 'Lost';
+      if ((item.net_cents ?? 0) > 0) return 'Won';
+      return (item.net_cents ?? 0) < 0 ? 'Lost' : 'Settled';
+    default:
+      return item.state;
   }
 }
 
+/** Stat-race result line (matches only — pools/tournaments have no opponent). */
 function statLine(item: ActivityItem): string | null {
+  if (item.type !== 'match') return null;
   const you = statValue(item.your_stat_line);
   const opp = statValue(item.opponent_stat_line);
   if (you == null && opp == null) return null;
@@ -40,20 +47,24 @@ function statLine(item: ActivityItem): string | null {
 }
 
 function title(item: ActivityItem): string {
+  if (item.title) return item.title;
   return `vs ${item.opponent_username ?? 'opponent'} · ${item.market_label}`;
 }
 
-/** A newly-settled match → a one-line toast summarizing the outcome. */
+/** A newly-settled contest → a one-line toast summarizing the outcome. */
 function toastFor(item: ActivityItem): string {
-  const name = item.opponent_username ?? 'opponent';
+  const what =
+    item.type === 'match'
+      ? `vs ${item.opponent_username ?? 'opponent'}`
+      : (item.title ?? item.market_label);
+  const net = item.net_cents ?? 0;
   if (item.state === 'SETTLED') {
-    const net = item.net_cents ?? 0;
-    return net > 0
-      ? `You won ${formatCurrency(net)} vs ${name}`
-      : `You lost ${formatCurrency(Math.abs(net))} vs ${name}`;
+    if (net > 0) return `You won ${formatCurrency(net)} ${what}`;
+    if (net < 0) return `You lost ${formatCurrency(Math.abs(net))} ${what}`;
+    return `Settled — ${what}`;
   }
-  if (item.state === 'PUSHED') return `Push vs ${name} — entry refunded`;
-  return `Match vs ${name} refunded`;
+  if (item.state === 'PUSHED') return `Push ${what} — entry refunded`;
+  return `Refunded — ${what}`;
 }
 
 export function ActivityPage() {
