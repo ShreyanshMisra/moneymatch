@@ -10,7 +10,7 @@ from ..dependencies import CurrentUser
 from ..errors import APIError
 from ..models.user import User
 from ..schemas.user import LimitsResponse, MeResponse, UpdateMeRequest, UserResponse
-from ..services import limits_service
+from ..services import limits_service, notifications_service
 from ..services.user_service import complete_onboarding, self_exclude
 
 router = APIRouter(tags=["me"])
@@ -19,10 +19,12 @@ router = APIRouter(tags=["me"])
 async def _me(session: AsyncSession, user: User) -> MeResponse:
     limit = await limits_service.get_or_create_limits(session, user.id)
     limits_service.promote_pending(limit)
+    unread = await notifications_service.unread_count(session, user.id)
     return MeResponse(
         user=UserResponse.model_validate(user),
         needs_onboarding=user.username is None,
         limits=LimitsResponse.model_validate(limit),
+        unread_notifications=unread,
     )
 
 

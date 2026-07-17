@@ -372,7 +372,7 @@ async def _form_room(
         await notifications_service.emit(
             session,
             ticket.user_id,
-            "match_found",
+            "room_filled",
             {
                 "kind": "pool",
                 "pool_id": str(pool.id),
