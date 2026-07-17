@@ -114,7 +114,10 @@ function NotificationRow({ note }: { note: NotificationItem }) {
             </PillButton>
           </div>
         ) : matchId ? (
-          <PillButton variant="outline" onClick={() => navigate(`/play?match=${matchId}`)}>
+          <PillButton
+            variant="outline"
+            onClick={() => navigate(`/play?match=${matchId}`)}
+          >
             View
           </PillButton>
         ) : undefined

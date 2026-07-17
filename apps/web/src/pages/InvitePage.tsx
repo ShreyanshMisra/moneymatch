@@ -64,9 +64,7 @@ export function InvitePage() {
             </p>
 
             {!preview.valid ? (
-              <p className="mt-6 text-sm text-red">
-                This challenge is no longer open.
-              </p>
+              <p className="mt-6 text-sm text-red">This challenge is no longer open.</p>
             ) : !session ? (
               <div className="mt-8">
                 <PillButton fullWidth onClick={goSignIn}>
@@ -90,10 +88,7 @@ export function InvitePage() {
                 {needsLink && (
                   <p className="mt-3 text-xs text-red">
                     Link your {preview.game} account first —{' '}
-                    <button
-                      className="underline"
-                      onClick={() => navigate('/profile')}
-                    >
+                    <button className="underline" onClick={() => navigate('/profile')}>
                       go to Profile
                     </button>
                     .

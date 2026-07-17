@@ -46,9 +46,7 @@ test('four similar players form a Medium K/D room, clear, and split the pool', a
   await expect(p0.getByTestId('pool-slip')).toContainText('your');
   await p0.getByRole('button', { name: '$10.00' }).click();
   // Disclosed as an estimate — never a fixed odds line.
-  await expect(p0.getByTestId('pool-slip')).toContainText(
-    'your share of the pool',
-  );
+  await expect(p0.getByTestId('pool-slip')).toContainText('your share of the pool');
 
   // All four enter Medium at $10 → the room forms.
   for (const page of pages) {
