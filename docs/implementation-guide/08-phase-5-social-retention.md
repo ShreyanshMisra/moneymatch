@@ -75,7 +75,16 @@ able to *summon* opponents; see `docs/business/business-and-competition.md` §3)
 
 ## Exit criteria
 
-- [ ] Friends/Inbox/Leaderboard match PDF p.7, 8, 11.
-- [ ] Invite-link funnel works for a brand-new user end-to-end and every step
-      emits an analytics event.
-- [ ] A settled match can be rematched in two clicks.
+- [x] Friends/Inbox/Leaderboard match PDF p.7, 8, 11. — `FriendsPanel`,
+      `LeaderboardPanel`, `InboxPage` under the Tournament sub-tabs + sidebar bell
+      dot (component tests: `FriendsPanel.test.tsx`, `LeaderboardPanel.test.tsx`,
+      `InboxPage.test.tsx`).
+- [x] Invite-link funnel works for a brand-new user end-to-end and every step
+      emits an analytics event. — public `/i/:token` preview → sign-in (return-to)
+      → link → accept, with `invite_created/viewed/accepted` telemetry;
+      `test_challenge_service.py` proves single-use token, expiry, and the
+      fresh-signup accept; e2e in `apps/web/e2e/invite.spec.ts` (needs the
+      test-auth seam — see BACKLOG).
+- [x] A settled match can be rematched in two clicks. — Rematch pill on terminal
+      H2H Activity rows → `POST /challenges {rematch_of}` (`test_challenges_endpoints.py`
+      `test_rematch_recreates_challenge`).

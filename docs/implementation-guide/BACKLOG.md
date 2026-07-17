@@ -111,3 +111,37 @@ Discovered during Phase 4 (pools & tournaments):
 - **Nightly metric-model refresh job** (deepened from Phase 2/3) — a stale μ/σ
   now skews personal bars and dispersion fields, not just pairings. The worker
   exists; add the nightly recompute. Rationale: bars must track real form.
+
+Discovered during Phase 5 (social & retention):
+
+- **Invite-link e2e test-auth seam** — `apps/web/e2e/invite.spec.ts` is written
+  but (like the H2H/pool specs) can't run in CI: the funnel needs a fresh,
+  un-onboarded Supabase session for user B and a seeded/linked session for A. The
+  funnel is proven executably by the API tests (`test_challenge_service.py`:
+  single-use token, expiry, fresh-signup accept, unlinked-prompt;
+  `test_challenges_endpoints.py`: public preview + accept). Pair with the same
+  seam the H2H/pool specs need.
+- **Pair rake-cap exact-count race** — `challenge_service` recomputes `friendly`
+  at *accept* time, but several challenges created under the cap could each accept
+  near-simultaneously and momentarily exceed it before the next recompute reads
+  the just-committed rows. At MVP volume this is negligible; a hard guarantee
+  wants a serialized per-pair counter (or the directional value-flow monitoring
+  already backlogged). Rationale: soft anti-collusion control, not a money
+  invariant — the ledger is unaffected.
+- **Sandbagging on friend stat-duel challenges** — challenges intentionally skip
+  the provisional/forecast-fairness gates (friends consent to skill gaps with
+  disclosure). A tanked baseline still can't move money unfairly in a *friendly*,
+  but a rake-bearing friend challenge on a stat market inherits the same
+  unguarded-duel gap noted in Phase 4. Pair with that item's single call site.
+- **Friend-code collision retry** — `gen_friend_code()` has a vanishing but
+  nonzero collision chance against the unique constraint; provisioning should
+  retry on the rare `IntegrityError` (as onboarding does for usernames).
+  Rationale: one-in-a-billion today, but a clean signup should never 500.
+- **Challenge "Respond" deep-link polish** — the Inbox Respond pill accepts and
+  routes to `/play?match=…`; the Play screen doesn't yet auto-open that match
+  slip from the query param. Wire the `?match=` param into `PlayPage` so Respond
+  lands directly on the confirm card. Rationale: closes the last click of the
+  challenge loop; the match is reachable via Activity meanwhile.
+- **Email/push for the social fan-out** — `notifications.channel_sent` is ready;
+  friend requests, challenges, and settlements are the first events worth an
+  out-of-band nudge (return-trigger layer). Pairs with the backlog email/push item.
