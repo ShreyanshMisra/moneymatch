@@ -30,3 +30,7 @@ test-results/
 
 #other
 .claude
+
+# agent tooling (Claude Code skills) — local only, never published
+.agents/
+skills-lock.json
