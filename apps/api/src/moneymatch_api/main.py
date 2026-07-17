@@ -19,6 +19,7 @@ from .errors import register_error_handlers
 from .logging import configure_logging
 from .routers import (
     activity,
+    admin,
     challenges,
     friends,
     health,
@@ -90,6 +91,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(challenges.router, prefix=API_V1_PREFIX)
     app.include_router(leaderboard.router, prefix=API_V1_PREFIX)
     app.include_router(notifications.router, prefix=API_V1_PREFIX)
+    app.include_router(admin.router, prefix=API_V1_PREFIX)
 
     return app
 

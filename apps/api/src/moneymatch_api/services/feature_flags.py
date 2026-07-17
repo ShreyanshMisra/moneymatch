@@ -1,14 +1,19 @@
-"""Feature-flag reads.
+"""Feature-flag reads and admin writes.
 
 Flags live in the `feature_flags` DB table (00-README §3.10) so admins can flip
-them without a deploy. This module is the read path; the write path arrives with
-the admin surface in Phase 6.
+them without a deploy. The read path (`get_boolean_flags`) is per-request/cycle,
+so a flip takes effect on the very next call with no restart (09-phase-6 · the
+"flag flips take effect without restart" test). Writes go through `set_flag` /
+`set_flag_payload` from the admin surface; each is audited by its caller.
 """
 
 from __future__ import annotations
 
+from typing import Any
+
 import structlog
 from sqlalchemy import select
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,6 +23,7 @@ from ..constants import (
     REGISTERED_GAMES,
     game_flag_key,
 )
+from ..models.feature_flag import FeatureFlag
 
 log = structlog.get_logger(__name__)
 
@@ -33,8 +39,6 @@ DEFAULT_FLAGS: dict[str, bool] = {
 async def get_boolean_flags(session: AsyncSession) -> dict[str, bool]:
     """Return the boolean feature flags, falling back to defaults on error."""
     try:
-        from ..models.feature_flag import FeatureFlag
-
         result = await session.execute(select(FeatureFlag))
         rows = result.scalars().all()
     except SQLAlchemyError as exc:
@@ -45,3 +49,47 @@ async def get_boolean_flags(session: AsyncSession) -> dict[str, bool]:
     for row in rows:
         flags[row.key] = bool(row.enabled)
     return flags
+
+
+async def list_flags(session: AsyncSession) -> list[FeatureFlag]:
+    """Every flag row (key, enabled, payload) for the admin flags table."""
+    result = await session.execute(select(FeatureFlag).order_by(FeatureFlag.key))
+    return list(result.scalars().all())
+
+
+async def get_flag(session: AsyncSession, key: str) -> FeatureFlag | None:
+    return await session.scalar(select(FeatureFlag).where(FeatureFlag.key == key))
+
+
+async def set_flag(
+    session: AsyncSession,
+    key: str,
+    *,
+    enabled: bool | None = None,
+    payload: dict[str, Any] | None = None,
+) -> FeatureFlag:
+    """Upsert a flag's `enabled` and/or `payload`. Flushes, never commits.
+
+    Upsert (not update) so a flag the first migration didn't seed (a new
+    per-game key, `worker_heartbeat`) can still be set by admin without a
+    migration. Read is per-request, so the change is live immediately.
+    """
+    values: dict[str, Any] = {"key": key}
+    if enabled is not None:
+        values["enabled"] = enabled
+    if payload is not None:
+        values["payload"] = payload
+    set_on_conflict = {k: v for k, v in values.items() if k != "key"}
+    if set_on_conflict:
+        stmt = (
+            pg_insert(FeatureFlag)
+            .values(**values)
+            .on_conflict_do_update(index_elements=["key"], set_=set_on_conflict)
+        )
+    else:
+        stmt = pg_insert(FeatureFlag).values(**values).on_conflict_do_nothing()
+    await session.execute(stmt)
+    await session.flush()
+    row = await get_flag(session, key)
+    assert row is not None
+    return row
