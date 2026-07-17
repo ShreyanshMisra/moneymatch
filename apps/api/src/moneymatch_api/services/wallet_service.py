@@ -72,12 +72,19 @@ async def get_wallet(
     session: AsyncSession, user_id: uuid.UUID, *, currency: str = DEMO
 ) -> Wallet:
     """Fetch the wallet for reads (no lock)."""
-    wallet = await session.scalar(
-        select(Wallet).where(Wallet.user_id == user_id, Wallet.currency == currency)
-    )
+    wallet = await get_wallet_or_none(session, user_id, currency=currency)
     if wallet is None:
         raise WalletNotFoundError()
     return wallet
+
+
+async def get_wallet_or_none(
+    session: AsyncSession, user_id: uuid.UUID, *, currency: str = DEMO
+) -> Wallet | None:
+    """Fetch the wallet for reads, or None (admin views over any user)."""
+    return await session.scalar(
+        select(Wallet).where(Wallet.user_id == user_id, Wallet.currency == currency)
+    )
 
 
 async def lock_wallet(

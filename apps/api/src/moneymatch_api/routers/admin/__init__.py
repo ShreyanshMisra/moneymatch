@@ -11,7 +11,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends
 
 from ...dependencies import require_admin
-from . import flags
+from . import flags, users
 
 router = APIRouter(
     prefix="/admin",
@@ -20,3 +20,4 @@ router = APIRouter(
 )
 
 router.include_router(flags.router)
+router.include_router(users.router)
