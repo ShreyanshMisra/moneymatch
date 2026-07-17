@@ -1,6 +1,11 @@
 // Client telemetry. The event NAMES are the load-bearing part — they outlast
-// the demo and must stay stable (ported from poc-reference telemetry.ts). The
-// real sink (PostHog) swaps in behind `track` in Phase 6 (11-migration §2).
+// the demo and must stay stable (ported from poc-reference telemetry.ts). Phase 6
+// points `track` at PostHog (behind VITE_POSTHOG_KEY); with no key it stays
+// console-only, so local/dev never sends events (09-phase-6 · deliverable 3).
+
+import posthog from 'posthog-js';
+
+import { env } from './env';
 
 export type TelemetryEvent =
   | 'oauth_linked'
@@ -22,7 +27,30 @@ export type TelemetryEvent =
   | 'rematch_sent'
   | 'invite_created'
   | 'invite_viewed'
-  | 'invite_accepted';
+  | 'invite_accepted'
+  // Phase 6 activation funnel (gtm-prelaunch §1.2). `landing`/`signup` fire
+  // from the sign-in surface; the rest map to existing product moments.
+  | 'landing'
+  | 'signup'
+  | 'account_linked'
+  | 'first_contest_joined'
+  | 'first_settlement';
+
+let initialized = false;
+
+function client(): typeof posthog | null {
+  if (!env.posthogKey) return null;
+  if (!initialized) {
+    posthog.init(env.posthogKey, {
+      api_host: env.posthogHost,
+      capture_pageview: false,
+      autocapture: false,
+      persistence: 'localStorage',
+    });
+    initialized = true;
+  }
+  return posthog;
+}
 
 export function track(
   event: TelemetryEvent,
@@ -31,5 +59,15 @@ export function track(
   if (import.meta.env.DEV) {
     console.debug(`[telemetry] ${event}`, props);
   }
-  // Phase 6: forward to the PostHog sink here.
+  client()?.capture(event, props);
+}
+
+/** Tie subsequent events to the authenticated user (call after sign-in). */
+export function identify(userId: string): void {
+  client()?.identify(userId);
+}
+
+/** Drop the identity on sign-out so events aren't misattributed. */
+export function resetIdentity(): void {
+  client()?.reset();
 }

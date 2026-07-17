@@ -744,10 +744,312 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/flags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Flags */
+        get: operations["list_flags_api_v1_admin_flags_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/flags/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Flag */
+        put: operations["update_flag_api_v1_admin_flags__key__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search Users */
+        get: operations["search_users_api_v1_admin_users_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** User Detail */
+        get: operations["user_detail_api_v1_admin_users__user_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}/freeze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Freeze User */
+        post: operations["freeze_user_api_v1_admin_users__user_id__freeze_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}/unfreeze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Unfreeze User */
+        post: operations["unfreeze_user_api_v1_admin_users__user_id__unfreeze_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}/adjust": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Adjust User */
+        post: operations["adjust_user_api_v1_admin_users__user_id__adjust_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/linked-accounts/{linked_account_id}/unbind": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Unbind Linked Account */
+        post: operations["unbind_linked_account_api_v1_admin_linked_accounts__linked_account_id__unbind_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** User Ledger */
+        get: operations["user_ledger_api_v1_admin_ledger_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/contests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Contests */
+        get: operations["list_contests_api_v1_admin_contests_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/contests/{ref_type}/{ref_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Contest Detail */
+        get: operations["contest_detail_api_v1_admin_contests__ref_type___ref_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/matches/{match_id}/resettle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resettle Match */
+        post: operations["resettle_match_api_v1_admin_matches__match_id__resettle_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/matches/{match_id}/void": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Void Match */
+        post: operations["void_match_api_v1_admin_matches__match_id__void_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Queue */
+        get: operations["queue_api_v1_admin_queue_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/reconciliation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Reconciliation */
+        get: operations["reconciliation_api_v1_admin_reconciliation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/risk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Risk */
+        get: operations["risk_api_v1_admin_risk_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/risk/flags/{flag_id}/clear": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Clear Flag */
+        post: operations["clear_flag_api_v1_admin_risk_flags__flag_id__clear_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * ActionResult
+         * @description Generic confirmation for a mutating admin action.
+         */
+        ActionResult: {
+            /**
+             * Ok
+             * @default true
+             */
+            ok: boolean;
+            /** Status */
+            status?: string | null;
+        };
         /**
          * ActivityItem
          * @description One row in the unified Activity feed (H2H matches, pools, tournaments).
@@ -806,6 +1108,251 @@ export interface components {
         AddFriendRequest: {
             /** Username Or Code */
             username_or_code: string;
+        };
+        /**
+         * AdjustRequest
+         * @description Manual ledger adjustment. Signed cents (credit/debit); reason required.
+         */
+        AdjustRequest: {
+            /**
+             * Amount Cents
+             * @description Signed cents; positive credits.
+             */
+            amount_cents: number;
+            /** Reason */
+            reason: string;
+        };
+        /** AdminContestDetail */
+        AdminContestDetail: {
+            /** Ref Type */
+            ref_type: string;
+            /**
+             * Ref Id
+             * Format: uuid
+             */
+            ref_id: string;
+            /** Game */
+            game: string;
+            /** Market */
+            market: string;
+            /** State */
+            state: string;
+            /** Entry Cents */
+            entry_cents: number;
+            /** Pot Cents */
+            pot_cents: number;
+            /** Prize Cents */
+            prize_cents: number;
+            /** Rake Cents */
+            rake_cents: number;
+            /** Engine Version */
+            engine_version: string | null;
+            /** Outcome Detail */
+            outcome_detail: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Resolved At */
+            resolved_at: string | null;
+            /** Participants */
+            participants: {
+                [key: string]: unknown;
+            }[];
+            /** Ledger */
+            ledger: {
+                [key: string]: unknown;
+            }[];
+            /** Platform Ledger */
+            platform_ledger: {
+                [key: string]: unknown;
+            }[];
+            /** Reconciliation */
+            reconciliation: {
+                [key: string]: unknown;
+            };
+        };
+        /** AdminContestListItem */
+        AdminContestListItem: {
+            /** Ref Type */
+            ref_type: string;
+            /**
+             * Ref Id
+             * Format: uuid
+             */
+            ref_id: string;
+            /** Game */
+            game: string;
+            /** Market */
+            market: string;
+            /** State */
+            state: string;
+            /** Entry Cents */
+            entry_cents: number;
+            /** Pot Cents */
+            pot_cents: number;
+            /** Participants */
+            participants: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Resolved At */
+            resolved_at: string | null;
+        };
+        /** AdminContestListResponse */
+        AdminContestListResponse: {
+            /** Contests */
+            contests: components["schemas"]["AdminContestListItem"][];
+        };
+        /**
+         * AdminContestRow
+         * @description A contest the user took part in (unified across match/pool/tournament).
+         */
+        AdminContestRow: {
+            /** Ref Type */
+            ref_type: string;
+            /**
+             * Ref Id
+             * Format: uuid
+             */
+            ref_id: string;
+            /** Game */
+            game: string;
+            /** Market */
+            market: string;
+            /** State */
+            state: string;
+            /** Entry Cents */
+            entry_cents: number;
+            /** Payout Cents */
+            payout_cents: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Resolved At */
+            resolved_at: string | null;
+        };
+        /** AdminLedgerPage */
+        AdminLedgerPage: {
+            /** Entries */
+            entries: components["schemas"]["LedgerEntryResponse"][];
+            /** Next Cursor */
+            next_cursor: string | null;
+        };
+        /** AdminLimits */
+        AdminLimits: {
+            /** Daily Loss Cap Cents */
+            daily_loss_cap_cents: number;
+            /** Daily Entry Cap Cents */
+            daily_entry_cap_cents: number;
+            /** Max Concurrent Contests */
+            max_concurrent_contests: number;
+        };
+        /** AdminLinkedAccount */
+        AdminLinkedAccount: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Game */
+            game: string;
+            /** Host Username */
+            host_username: string;
+            /** Host Account Id */
+            host_account_id: string;
+            /** Link Method */
+            link_method: string;
+            /** Status */
+            status: string;
+        };
+        /** AdminUserDetail */
+        AdminUserDetail: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Auth Id */
+            auth_id: string;
+            /** Username */
+            username: string | null;
+            /** Email */
+            email: string | null;
+            /** Friend Code */
+            friend_code: string;
+            /** Role */
+            role: string;
+            /** Status */
+            status: string;
+            /** Residence State */
+            residence_state: string | null;
+            /** Dob Attested 18Plus */
+            dob_attested_18plus: boolean;
+            /**
+             * Member Since
+             * Format: date-time
+             */
+            member_since: string;
+            /** Last Seen At */
+            last_seen_at: string | null;
+            /** Available Cents */
+            available_cents: number;
+            /** Escrow Cents */
+            escrow_cents: number;
+            /** Lifetime Net Cents */
+            lifetime_net_cents: number;
+            limits: components["schemas"]["AdminLimits"] | null;
+            /** Linked Accounts */
+            linked_accounts: components["schemas"]["AdminLinkedAccount"][];
+            /** Contests */
+            contests: components["schemas"]["AdminContestRow"][];
+            /** Recent Ledger */
+            recent_ledger: components["schemas"]["LedgerEntryResponse"][];
+        };
+        /** AdminUserListResponse */
+        AdminUserListResponse: {
+            /** Users */
+            users: components["schemas"]["AdminUserSummary"][];
+        };
+        /**
+         * AdminUserSummary
+         * @description A row in the users table (search results / list).
+         */
+        AdminUserSummary: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Username */
+            username: string | null;
+            /** Email */
+            email: string | null;
+            /** Friend Code */
+            friend_code: string;
+            /** Role */
+            role: string;
+            /** Status */
+            status: string;
+            /** Residence State */
+            residence_state: string | null;
+            /**
+             * Member Since
+             * Format: date-time
+             */
+            member_since: string;
+            /** Available Cents */
+            available_cents: number;
+            /** Escrow Cents */
+            escrow_cents: number;
         };
         /**
          * ChallengeAcceptResponse
@@ -968,6 +1515,22 @@ export interface components {
             /** Est Multiplier Bps */
             est_multiplier_bps: number;
         };
+        /** FlagItem */
+        FlagItem: {
+            /** Key */
+            key: string;
+            /** Enabled */
+            enabled: boolean;
+            /** Payload */
+            payload?: {
+                [key: string]: unknown;
+            };
+        };
+        /** FlagsResponse */
+        FlagsResponse: {
+            /** Flags */
+            flags: components["schemas"]["FlagItem"][];
+        };
         /**
          * Forecast
          * @description The duel-forecast disclosure for a stat/chess pairing.
@@ -1074,6 +1637,7 @@ export interface components {
             flags: {
                 [key: string]: boolean;
             };
+            worker: components["schemas"]["WorkerHealth"];
         };
         /** LeaderboardResponse */
         LeaderboardResponse: {
@@ -1499,6 +2063,19 @@ export interface components {
             /** Avatar Url */
             avatar_url?: string | null;
         };
+        /** QueueDepthRow */
+        QueueDepthRow: {
+            /** Game */
+            game: string;
+            /** Market */
+            market: string;
+            /** Entry Cents */
+            entry_cents: number;
+            /** Waiting */
+            waiting: number;
+            /** Avg Wait Seconds */
+            avg_wait_seconds: number;
+        };
         /**
          * QueueRequest
          * @description Join the queue. Ids + a server preset only — no amounts, no timestamps.
@@ -1512,6 +2089,21 @@ export interface components {
             speed?: string | null;
             /** Entry Preset Cents */
             entry_preset_cents: number;
+        };
+        /** QueueResponse */
+        QueueResponse: {
+            /** Waiting */
+            waiting: number;
+            /** Matched */
+            matched: number;
+            /** Expired */
+            expired: number;
+            /** Canceled */
+            canceled: number;
+            /** Expiry Rate */
+            expiry_rate: number;
+            /** Depth */
+            depth: components["schemas"]["QueueDepthRow"][];
         };
         /**
          * QueueStatusResponse
@@ -1530,6 +2122,105 @@ export interface components {
              * @default true
              */
             can_cancel: boolean;
+        };
+        /** ReconViolationRow */
+        ReconViolationRow: {
+            /** Ref Type */
+            ref_type: string;
+            /**
+             * Ref Id
+             * Format: uuid
+             */
+            ref_id: string;
+            /** Violations */
+            violations: string[];
+            /** Totals */
+            totals: {
+                [key: string]: number;
+            };
+        };
+        /** ReconciliationResponse */
+        ReconciliationResponse: {
+            /** Ok */
+            ok: boolean;
+            /** Solvency Ok */
+            solvency_ok: boolean;
+            /** Solvency Violations */
+            solvency_violations: string[];
+            /** Totals */
+            totals: {
+                [key: string]: number;
+            };
+            /** Contest Violations */
+            contest_violations: components["schemas"]["ReconViolationRow"][];
+            worker: components["schemas"]["WorkerStatus"];
+        };
+        /** ResettleResult */
+        ResettleResult: {
+            /** Outcome */
+            outcome: string;
+            /** State */
+            state: string;
+        };
+        /** RiskFlagRow */
+        RiskFlagRow: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * User Id
+             * Format: uuid
+             */
+            user_id: string;
+            /** Username */
+            username: string | null;
+            /** Game */
+            game: string;
+            /** Metric */
+            metric: string;
+            /** Kind */
+            kind: string;
+            /** Detail */
+            detail: {
+                [key: string]: unknown;
+            };
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** RiskRateRow */
+        RiskRateRow: {
+            /** Game */
+            game: string;
+            /** Market */
+            market: string;
+            /** Offered */
+            offered: number;
+            /** Accepted */
+            accepted: number;
+            /** Settled */
+            settled: number;
+            /** Expected Rate */
+            expected_rate: number | null;
+            /** Actual Rate */
+            actual_rate: number | null;
+            /** Rake Cents */
+            rake_cents: number;
+            /** Dispute Count */
+            dispute_count: number;
+            /** Alert */
+            alert: boolean;
+        };
+        /** RiskResponse */
+        RiskResponse: {
+            /** Rates */
+            rates: components["schemas"]["RiskRateRow"][];
+            /** Flags */
+            flags: components["schemas"]["RiskFlagRow"][];
         };
         /** StandingRow */
         StandingRow: {
@@ -1655,6 +2346,19 @@ export interface components {
             tournaments: components["schemas"]["TournamentView"][];
         };
         /**
+         * UpdateFlagRequest
+         * @description Patch a flag: toggle `enabled` and/or replace its `payload` (e.g.
+         *     `geo_config`'s excluded-state list). At least one field must be present.
+         */
+        UpdateFlagRequest: {
+            /** Enabled */
+            enabled?: boolean | null;
+            /** Payload */
+            payload?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /**
          * UpdateMeRequest
          * @description Onboarding (username + state + 18+, set once) and/or limit edits.
          *
@@ -1719,6 +2423,11 @@ export interface components {
             /** Context */
             ctx?: Record<string, never>;
         };
+        /** VoidRequest */
+        VoidRequest: {
+            /** Reason */
+            reason: string;
+        };
         /** WaitingResponse */
         WaitingResponse: {
             /** Waiting */
@@ -1776,6 +2485,20 @@ export interface components {
             lifetime_net_cents: number;
             /** Recent */
             recent: components["schemas"]["LedgerEntryResponse"][];
+        };
+        /** WorkerHealth */
+        WorkerHealth: {
+            /** Heartbeat At */
+            heartbeat_at: string | null;
+            /** Stale */
+            stale: boolean;
+        };
+        /** WorkerStatus */
+        WorkerStatus: {
+            /** Heartbeat At */
+            heartbeat_at: string | null;
+            /** Stale */
+            stale: boolean;
         };
         /** YouSummaryView */
         YouSummaryView: {
@@ -3375,6 +4098,576 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MarkReadResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_flags_api_v1_admin_flags_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlagsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_flag_api_v1_admin_flags__key__put: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateFlagRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlagItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    search_users_api_v1_admin_users_get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+            };
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    user_detail_api_v1_admin_users__user_id__get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    freeze_user_api_v1_admin_users__user_id__freeze_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActionResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unfreeze_user_api_v1_admin_users__user_id__unfreeze_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActionResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    adjust_user_api_v1_admin_users__user_id__adjust_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdjustRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActionResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unbind_linked_account_api_v1_admin_linked_accounts__linked_account_id__unbind_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                linked_account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActionResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    user_ledger_api_v1_admin_ledger_get: {
+        parameters: {
+            query: {
+                /** @description user id */
+                user: string;
+                cursor?: string | null;
+            };
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminLedgerPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_contests_api_v1_admin_contests_get: {
+        parameters: {
+            query?: {
+                state?: string | null;
+                game?: string | null;
+                ref_type?: string | null;
+            };
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminContestListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    contest_detail_api_v1_admin_contests__ref_type___ref_id__get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                ref_type: string;
+                ref_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminContestDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resettle_match_api_v1_admin_matches__match_id__resettle_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                match_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResettleResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    void_match_api_v1_admin_matches__match_id__void_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                match_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoidRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResettleResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    queue_api_v1_admin_queue_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QueueResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reconciliation_api_v1_admin_reconciliation_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReconciliationResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    risk_api_v1_admin_risk_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    clear_flag_api_v1_admin_risk_flags__flag_id__clear_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                flag_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActionResult"];
                 };
             };
             /** @description Validation Error */

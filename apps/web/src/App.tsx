@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
+import { RequireAdmin } from './auth/RequireAdmin';
 import { RequireAuth } from './auth/RequireAuth';
 import { AppShell } from './components/AppShell';
 import { ActivityPage } from './pages/ActivityPage';
@@ -11,6 +12,13 @@ import { ProfilePage } from './pages/ProfilePage';
 import { SignInPage } from './pages/SignInPage';
 import { TournamentPage } from './pages/TournamentPage';
 import { WalletPage } from './pages/WalletPage';
+import { AdminContestsPage } from './pages/admin/AdminContestsPage';
+import { AdminFlagsPage } from './pages/admin/AdminFlagsPage';
+import { AdminLayout } from './pages/admin/AdminLayout';
+import { AdminQueuePage } from './pages/admin/AdminQueuePage';
+import { AdminReconciliationPage } from './pages/admin/AdminReconciliationPage';
+import { AdminRiskPage } from './pages/admin/AdminRiskPage';
+import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 
 export function App() {
   return (
@@ -27,6 +35,18 @@ export function App() {
           <Route path="wallet" element={<WalletPage />} />
           <Route path="inbox" element={<InboxPage />} />
           <Route path="profile" element={<ProfilePage />} />
+        </Route>
+        {/* Admin tree: separate, dense layout (not the consumer design system). */}
+        <Route element={<RequireAdmin />}>
+          <Route path="admin" element={<AdminLayout />}>
+            <Route index element={<Navigate to="/admin/users" replace />} />
+            <Route path="users" element={<AdminUsersPage />} />
+            <Route path="contests" element={<AdminContestsPage />} />
+            <Route path="queue" element={<AdminQueuePage />} />
+            <Route path="flags" element={<AdminFlagsPage />} />
+            <Route path="reconciliation" element={<AdminReconciliationPage />} />
+            <Route path="risk" element={<AdminRiskPage />} />
+          </Route>
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/play" replace />} />
