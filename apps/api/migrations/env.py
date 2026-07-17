@@ -23,12 +23,32 @@ config.set_main_option("sqlalchemy.url", get_settings().database_url)
 target_metadata = Base.metadata
 
 
+# Columns whose server default is a Postgres function/expression that the server
+# normalizes on read (casts, spacing), so the stored text never round-trips equal
+# to the model's rendered default. Comparing them yields a permanent false drift;
+# skip just these (the values are still enforced by the migration + model).
+_SERVER_DEFAULT_SKIP = {("users", "friend_code")}
+
+
+def _compare_server_default(
+    _context,
+    _inspected_column,
+    metadata_column,
+    _inspected_default,
+    _metadata_default,
+    _rendered_metadata_default,
+) -> bool | None:
+    if (metadata_column.table.name, metadata_column.name) in _SERVER_DEFAULT_SKIP:
+        return False  # treat as "not different" → no spurious autogenerate op
+    return None  # fall back to alembic's default comparison
+
+
 def _run_migrations(connection: Connection) -> None:
     context.configure(
         connection=connection,
         target_metadata=target_metadata,
         compare_type=True,
-        compare_server_default=True,
+        compare_server_default=_compare_server_default,
     )
     with context.begin_transaction():
         context.run_migrations()

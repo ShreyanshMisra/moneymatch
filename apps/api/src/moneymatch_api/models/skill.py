@@ -53,8 +53,12 @@ class MetricModel(Base, TimestampMixin):
     game: Mapped[str] = mapped_column(String(32), nullable=False)
     # A typed rate metric key, e.g. "cs2_kd_ratio", "dota2_gpm".
     metric: Mapped[str] = mapped_column(String(48), nullable=False)
-    mu: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    sigma: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    mu: Mapped[float] = mapped_column(
+        Float, default=0.0, server_default="0", nullable=False
+    )
+    sigma: Mapped[float] = mapped_column(
+        Float, default=0.0, server_default="0", nullable=False
+    )
     # Number of matches that fed the model — below the floor ⇒ provisional.
     n: Mapped[int] = mapped_column(
         Integer, default=0, server_default="0", nullable=False
@@ -73,7 +77,9 @@ class RawPayload(Base):
     # sha256 of the canonical payload bytes — dedupe + tamper-evidence.
     content_hash: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
     # Total bytes of the stored payload (a cheap retention/ops signal).
-    size_bytes: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
+    size_bytes: Mapped[int] = mapped_column(
+        BigInteger, default=0, server_default="0", nullable=False
+    )
     fetched_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.clock_timestamp(),
