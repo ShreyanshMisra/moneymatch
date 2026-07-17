@@ -10,6 +10,7 @@ from .play import Match, MatchPlayer, QueueTicket
 from .pools import SoloEntry, SoloPool
 from .risk import RiskFlag
 from .skill import MetricModel, RawPayload
+from .social import Challenge, Friendship
 from .tournaments import Tournament, TournamentEntry
 from .user import User
 from .wallet import LedgerEntry, Limit, PlatformLedgerEntry, Wallet
@@ -35,4 +36,6 @@ __all__ = [
     "Tournament",
     "TournamentEntry",
     "RiskFlag",
+    "Friendship",
+    "Challenge",
 ]

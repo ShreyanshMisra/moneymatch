@@ -159,6 +159,13 @@ class Match(Base, TimestampMixin):
     brokered: Mapped[bool] = mapped_column(
         Boolean, default=False, server_default="false", nullable=False
     )
+    # True ⇒ a zero-rake friendly (a friend challenge past the pair rake-cap):
+    # both entries are refunded on settle and it's excluded from the leaderboard.
+    # The winner is still graded/recorded; only the money flow is neutralized
+    # (08-phase-5 · collusion posture for friends). rake_bps is 0 for these.
+    friendly: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default="false", nullable=False
+    )
     host_game_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     # Server-owned "play your next match after this" anchor — never client-set.
     matched_at: Mapped[datetime | None] = mapped_column(
