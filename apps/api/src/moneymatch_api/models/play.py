@@ -111,8 +111,15 @@ class QueueTicket(Base, TimestampMixin):
     state: Mapped[str] = mapped_column(
         String(16), default="waiting", server_default="waiting", nullable=False
     )
-    # The match this ticket paired into (set when state → matched).
+    # The contest this ticket formed into (exactly one is set when state →
+    # matched, keyed by `product`): an H2H match, a solo pool, or a tournament.
     match_id: Mapped[uuid.UUID | None] = mapped_column(
+        PGUUID(as_uuid=True), nullable=True
+    )
+    pool_id: Mapped[uuid.UUID | None] = mapped_column(
+        PGUUID(as_uuid=True), nullable=True
+    )
+    tournament_id: Mapped[uuid.UUID | None] = mapped_column(
         PGUUID(as_uuid=True), nullable=True
     )
     expires_at: Mapped[datetime] = mapped_column(
@@ -150,6 +157,13 @@ class Match(Base, TimestampMixin):
     # True ⇒ the platform brokered the game (chess open challenge); the graded
     # host game id lands in `host_game_id`.
     brokered: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default="false", nullable=False
+    )
+    # True ⇒ a zero-rake friendly (a friend challenge past the pair rake-cap):
+    # both entries are refunded on settle and it's excluded from the leaderboard.
+    # The winner is still graded/recorded; only the money flow is neutralized
+    # (08-phase-5 · collusion posture for friends). rake_bps is 0 for these.
+    friendly: Mapped[bool] = mapped_column(
         Boolean, default=False, server_default="false", nullable=False
     )
     host_game_id: Mapped[str | None] = mapped_column(String(64), nullable=True)

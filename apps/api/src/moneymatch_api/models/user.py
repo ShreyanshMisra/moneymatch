@@ -7,6 +7,7 @@ attestation gate escrow (enforced server-side later), not sign-in.
 
 from __future__ import annotations
 
+import secrets
 from datetime import datetime
 
 from sqlalchemy import CheckConstraint, DateTime, String, func
@@ -17,6 +18,19 @@ from ..db.base import Base, TimestampMixin, uuid_pk
 
 USER_ROLES = ("user", "admin")
 USER_STATUSES = ("active", "frozen", "self_excluded")
+
+# Friend-code alphabet: base32 minus the ambiguous glyphs (0/O, 1/I). A short,
+# immutable, shareable code (`MM-7F3K2Q`) so friends add each other without a
+# scrapeable public username directory (08-phase-5 · deliverable 2).
+_FRIEND_CODE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"
+_FRIEND_CODE_LEN = 6
+
+
+def gen_friend_code() -> str:
+    body = "".join(
+        secrets.choice(_FRIEND_CODE_ALPHABET) for _ in range(_FRIEND_CODE_LEN)
+    )
+    return f"MM-{body}"
 
 
 class User(Base, TimestampMixin):
@@ -33,6 +47,14 @@ class User(Base, TimestampMixin):
     auth_id: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     # Null until the user completes onboarding step 2; set once, then immutable.
     username: Mapped[str | None] = mapped_column(CITEXT(), unique=True, nullable=True)
+    # Immutable shareable friend code (`MM-7F3K2Q`), minted at row creation.
+    friend_code: Mapped[str] = mapped_column(
+        String(12), unique=True, default=gen_friend_code, nullable=False
+    )
+    # Presence-lite heartbeat: green dot when active in the last 5 min (08-phase-5).
+    last_seen_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     email: Mapped[str | None] = mapped_column(String(320), nullable=True)
     residence_state: Mapped[str | None] = mapped_column(String(2), nullable=True)
     dob_attested_18plus: Mapped[bool] = mapped_column(

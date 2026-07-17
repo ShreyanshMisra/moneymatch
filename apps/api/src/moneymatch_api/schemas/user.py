@@ -17,6 +17,7 @@ class UserResponse(BaseModel):
     id: UUID
     username: str | None
     email: str | None
+    friend_code: str
     residence_state: str | None
     dob_attested_18plus: bool
     role: str
@@ -40,6 +41,7 @@ class MeResponse(BaseModel):
     user: UserResponse
     needs_onboarding: bool
     limits: LimitsResponse | None = None
+    unread_notifications: int = 0  # sidebar bell dot (08-phase-5)
 
 
 class UpdateMeRequest(BaseModel):

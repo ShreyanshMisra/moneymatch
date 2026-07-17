@@ -4,14 +4,17 @@ import { useAuth } from '../auth/useAuth';
 import { api } from '../lib/api';
 
 export interface ActivityItem {
-  type: 'match';
+  type: 'match' | 'pool' | 'tournament';
   id: string;
   game: string;
   market: string;
   market_label: string;
   kind: string;
-  state: 'PENDING' | 'ACTIVE' | 'AWAITING_RESULT' | 'SETTLED' | 'PUSHED' | 'CANCELED';
+  // Matches use PENDING/ACTIVE/…; pools/tournaments use OPEN/LOCKED/SETTLED/CANCELED.
+  state: string;
   entry_cents: number;
+  // Present for pool/tournament rows; matches build their own title from opponent.
+  title: string | null;
   net_cents: number | null;
   opponent_username: string | null;
   your_stat_line: Record<string, unknown> | null;
@@ -20,7 +23,7 @@ export interface ActivityItem {
   resolved_at: string | null;
 }
 
-/** The unified activity feed (H2H now). Polls every 10 s (design: activity 10 s). */
+/** The unified activity feed (matches + pools + tournaments). Polls every 10 s. */
 export function useActivity() {
   const { session } = useAuth();
   return useQuery({

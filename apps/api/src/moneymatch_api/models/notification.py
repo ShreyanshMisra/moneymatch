@@ -18,14 +18,27 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from ..db.base import Base, uuid_pk
 
-NOTIFICATION_KINDS = ("match_found", "settled", "challenge", "refund", "system")
+# Every lifecycle event fans out to one of these (08-phase-5 · deliverable 7).
+# Phase 3 wrote match_found/settled/refund; Phase 5 adds the social kinds.
+NOTIFICATION_KINDS = (
+    "match_found",
+    "settled",
+    "refund",
+    "challenge_received",
+    "challenge_accepted",
+    "friend_request",
+    "room_filled",
+    "system",
+)
+
+_KIND_SQL = ", ".join(f"'{k}'" for k in NOTIFICATION_KINDS)
 
 
 class Notification(Base):
     __tablename__ = "notifications"
     __table_args__ = (
         CheckConstraint(
-            "kind IN ('match_found', 'settled', 'challenge', 'refund', 'system')",
+            f"kind IN ({_KIND_SQL})",
             name="ck_notifications_kind",
         ),
     )
@@ -43,6 +56,11 @@ class Notification(Base):
     )
     read_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
+    )
+    # Which out-of-band channels have been dispatched (email/push are post-MVP;
+    # the schema carries the flag now — 08-phase-5 · deliverable 7).
+    channel_sent: Mapped[dict[str, Any]] = mapped_column(
+        JSONB, default=dict, server_default="{}", nullable=False
     )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

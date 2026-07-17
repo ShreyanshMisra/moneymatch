@@ -139,3 +139,107 @@ GRADE_MATCH_SKEW_MS = 60_000
 
 # The settlement worker's poll cadence (01-architecture §3.3 · "every ~15 s").
 WORKER_POLL_INTERVAL_SECONDS = 15
+
+
+# --------------------------------------------------------------------------- #
+# Solo pools & tournaments config (07-phase-4). CS2 only at MVP — the one
+# adapter with rich server-fetchable telemetry. All fairness constants live
+# here, never inline in the engines ("all constants in config").
+# --------------------------------------------------------------------------- #
+
+# Which games offer pools/tournaments (config, not code — the engine is
+# game-agnostic; chess/dota wait for richer/validated telemetry).
+POOL_GAMES: tuple[str, ...] = (GAME_CS2_FACEIT,)
+TOURNAMENT_GAMES: tuple[str, ...] = (GAME_CS2_FACEIT,)
+
+# Metrics offered for pools/tournaments per game (rate-based allowlist only).
+POOL_METRICS: dict[str, tuple[str, ...]] = {
+    GAME_CS2_FACEIT: ("cs2_kd_ratio", "cs2_adr", "cs2_headshot_pct"),
+}
+TOURNAMENT_METRICS: dict[str, tuple[str, ...]] = {
+    GAME_CS2_FACEIT: ("cs2_kd_ratio", "cs2_adr", "cs2_headshot_pct"),
+}
+
+# Personal-bar difficulty multipliers: bar = round(μ + k·σ). Implied clear rate
+# is 1 − Φ(k) (≈31% / 16% / 4%) — disclosed difficulty, never an odds line.
+POOL_DIFFICULTY_K: dict[str, float] = {"easy": 0.5, "medium": 1.0, "hard": 1.75}
+
+# Rounding increment for a personal/room bar, per metric (bars are quoted to a
+# clean step so two players' bars are comparable and reproducible).
+METRIC_BAR_INCREMENT: dict[str, float] = {
+    "cs2_kd_ratio": 0.05,
+    "cs2_adr": 1.0,
+    "cs2_headshot_pct": 1.0,
+}
+
+# Room formation. A full room is `POOL_ROOM_SIZE`; at ladder end we form down to
+# `POOL_MIN_ROOM`. The composition predicate keeps every member's implied clear
+# probability vs. the room bar inside [p_target/2, min(2·p_target, 0.5)].
+POOL_ROOM_SIZE = 4
+POOL_MIN_ROOM = 3
+# Personal-bar spread cap across a room, as a multiple of the pooled σ.
+POOL_BAR_SPREAD_CAP_SIGMA = 1.5
+# The pool settlement window: your first qualifying match must land inside it.
+POOL_WINDOW_SECONDS = 24 * 3600
+
+# Tournament field. Formed under a μ-dispersion cap; scored on the mean of the
+# first-N qualifying matches; top places split per `TOURNAMENT_PRIZE_SPLIT`.
+TOURNAMENT_FIELD_SIZE = 10
+TOURNAMENT_MIN_FIELD = 6
+TOURNAMENT_MIN_RANKED = 4
+TOURNAMENT_SCORE_N = 3
+TOURNAMENT_PRIZE_SPLIT: tuple[int, ...] = (50, 30, 20)  # relative weights
+# max(μ) − min(μ) ≤ dispersion_cap · σ_pooled (start tight, tune with data).
+TOURNAMENT_DISPERSION_CAP = 1.0
+TOURNAMENT_WINDOW_SECONDS = 48 * 3600
+# Live standings refresh cadence during the window (cheap, cached).
+TOURNAMENT_STANDINGS_REFRESH_SECONDS = 10 * 60
+
+# Engine-version stamps for pool/tournament settlements (dispute replay).
+POOL_ENGINE_VERSION = "pool-1"
+TOURNAMENT_ENGINE_VERSION = "tourney-1"
+
+# Sandbagging detector v1: flag + block when the recent-N mean sits z-below the
+# lifetime mean (tanking a baseline is the attack the personal bar invites).
+SANDBAG_RECENT_N = 10
+SANDBAG_Z_THRESHOLD = -1.5
+
+# Human labels for rate metrics (pool/tournament market rows + standings).
+METRIC_LABELS: dict[str, str] = {
+    "cs2_kd_ratio": "K/D ratio",
+    "cs2_adr": "ADR",
+    "cs2_headshot_pct": "Headshot %",
+    "dota2_kda_ratio": "KDA ratio",
+    "dota2_gpm": "GPM",
+}
+
+
+def metric_label(metric: str) -> str:
+    return METRIC_LABELS.get(metric, metric)
+
+
+# --------------------------------------------------------------------------- #
+# Social & retention config (08-phase-5). Caps and windows live here, never
+# inline in the friends/challenge services.
+# --------------------------------------------------------------------------- #
+
+# Friendship caps (08-phase-5 · deliverable 2).
+MAX_FRIENDS = 500
+MAX_PENDING_OUTBOUND = 20
+
+# Presence-lite: "active" (green dot) if the heartbeat landed within this window.
+PRESENCE_WINDOW_SECONDS = 5 * 60
+
+# Direct challenge / invite link expiry (08-phase-5 · deliverable 3).
+CHALLENGE_TTL_SECONDS = 24 * 3600
+
+# Anti-collusion pair caps on **rake-bearing** contests between the same two
+# accounts (friends included). Past the cap a challenge becomes a zero-rake
+# friendly instead of being blocked (08-phase-5 · collusion posture for friends).
+PAIR_RAKE_CONTESTS_PER_DAY = 3
+PAIR_RAKE_CONTESTS_PER_WEEK = 10
+
+# Leaderboard: rank real users by ROI over a rolling window; a minimum number of
+# settled rake-bearing contests qualifies you (08-phase-5 · deliverable 5).
+LEADERBOARD_WINDOW_DAYS = 30
+LEADERBOARD_MIN_CONTESTS = 3
