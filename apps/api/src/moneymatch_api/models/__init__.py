@@ -7,7 +7,10 @@ from .feature_flag import FeatureFlag
 from .linked_account import LinkedAccount
 from .notification import Notification
 from .play import Match, MatchPlayer, QueueTicket
+from .pools import SoloEntry, SoloPool
+from .risk import RiskFlag
 from .skill import MetricModel, RawPayload
+from .tournaments import Tournament, TournamentEntry
 from .user import User
 from .wallet import LedgerEntry, Limit, PlatformLedgerEntry, Wallet
 
@@ -27,4 +30,9 @@ __all__ = [
     "Match",
     "MatchPlayer",
     "Notification",
+    "SoloPool",
+    "SoloEntry",
+    "Tournament",
+    "TournamentEntry",
+    "RiskFlag",
 ]
