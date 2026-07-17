@@ -24,6 +24,7 @@ function item(overrides: Partial<ActivityItem>): ActivityItem {
     kind: 'stat_race',
     state: 'ACTIVE',
     entry_cents: 1000,
+    title: null,
     net_cents: null,
     opponent_username: 'kvem_',
     your_stat_line: null,
@@ -59,6 +60,24 @@ describe('ActivityPage', () => {
     expect(screen.getByText(/Won/)).toBeInTheDocument();
     expect(screen.getByText(/You 1.5 · kvem_ 1.1/)).toBeInTheDocument();
     expect(screen.getByText('+$8.00')).toBeInTheDocument(); // signed net, green
+  });
+
+  it('renders a settled pool row from its title, not an opponent', () => {
+    mockItems([
+      item({
+        type: 'pool',
+        id: 'pool1',
+        title: 'K/D ratio · Medium pool',
+        state: 'SETTLED',
+        net_cents: 800,
+        opponent_username: null,
+        resolved_at: new Date().toISOString(),
+      }),
+    ]);
+    renderWithProviders(<ActivityPage />);
+    expect(screen.getByText('K/D ratio · Medium pool')).toBeInTheDocument();
+    expect(screen.getByText(/Won/)).toBeInTheDocument();
+    expect(screen.getByText('+$8.00')).toBeInTheDocument();
   });
 
   it('labels a push as refunded and an in-flight match as in play', () => {
