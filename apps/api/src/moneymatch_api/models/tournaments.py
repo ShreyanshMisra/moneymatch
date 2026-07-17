@@ -49,10 +49,7 @@ class Tournament(Base, TimestampMixin):
             name="ck_tournaments_state",
         ),
         CheckConstraint("entry_cents > 0", name="ck_tournaments_entry_pos"),
-        CheckConstraint(
-            "pot_cents = prize_cents + rake_cents",
-            name="ck_tournaments_econ_reconciles",
-        ),
+        # No pot=prize+rake check (see solo_pools): refunds live outside prize+rake.
     )
 
     id = uuid_pk()

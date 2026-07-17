@@ -79,3 +79,40 @@ def h2h_multiplier_bps(rake_bps: int = DEFAULT_RAKE_BPS) -> int:
     """Derived H2H display multiplier in basis points: 2·(1 − rake). This is the
     `×1.80` on market cards — computed, never configured (02-design-system §4)."""
     return 2 * (BPS_DENOMINATOR - rake_bps)
+
+
+def split_weighted(
+    pot_cents: int, weights: tuple[int, ...], rake_bps: int = DEFAULT_RAKE_BPS
+) -> Split:
+    """Split `pot_cents` among prize places by integer `weights` (e.g. 50/30/20).
+
+    Takes `rake_bps` off the pot, then floors each place's share of the
+    distributable by weight; any flooring remainder lands in the **rake** so the
+    books reconcile exactly (00-README §3.3). The returned `payouts_cents` are one
+    slice **per weight**, best place first — the tournament engine maps them to
+    ranks and re-divides tied places itself (tie remainder goes to the earlier
+    enqueue, not the rake, so the invariant still holds exactly).
+
+    Pass only the weights for the places that are actually filled (renormalize by
+    truncating `weights` when fewer entrants ranked than there are places).
+    """
+    if pot_cents < 0:
+        raise ValueError("pot must be non-negative")
+    if any(w < 0 for w in weights):
+        raise ValueError("weights must be non-negative")
+
+    rake = rake_for(pot_cents, rake_bps)
+    distributable = pot_cents - rake
+    wsum = sum(weights)
+    if wsum == 0:
+        # No places to pay (no ranked finishers) — whole pot is rake; the caller
+        # decides whether that path means refund (it does — and never calls here).
+        return Split(pot_cents=pot_cents, rake_cents=pot_cents, payouts_cents=())
+
+    slices = tuple(distributable * w // wsum for w in weights)
+    remainder = distributable - sum(slices)
+    return Split(
+        pot_cents=pot_cents,
+        rake_cents=rake + remainder,
+        payouts_cents=slices,
+    )

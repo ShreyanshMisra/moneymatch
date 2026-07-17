@@ -53,9 +53,8 @@ class SoloPool(Base, TimestampMixin):
             name="ck_solo_pools_state",
         ),
         CheckConstraint("entry_cents > 0", name="ck_solo_pools_entry_pos"),
-        CheckConstraint(
-            "pot_cents = prize_cents + rake_cents", name="ck_solo_pools_econ_reconciles"
-        ),
+        # No pot=prize+rake check: refunded entries are neither prize nor rake, so
+        # pot (= total entries) = prize+rake+refunds. reconciliation is the enforcer.
     )
 
     id = uuid_pk()

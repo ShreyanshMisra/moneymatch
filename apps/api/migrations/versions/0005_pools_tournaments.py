@@ -92,9 +92,9 @@ def upgrade() -> None:
             name="ck_solo_pools_state",
         ),
         sa.CheckConstraint("entry_cents > 0", name="ck_solo_pools_entry_pos"),
-        sa.CheckConstraint(
-            "pot_cents = prize_cents + rake_cents", name="ck_solo_pools_econ_reconciles"
-        ),
+        # No pot=prize+rake check: for a pooled format the refunded (unverifiable)
+        # entries are neither prize nor rake, so pot (= total entries) only equals
+        # prize+rake+refunds. reconciliation_service enforces the money invariant.
     )
     op.create_index("ix_solo_pools_window_ends_at", "solo_pools", ["window_ends_at"])
 
@@ -173,10 +173,7 @@ def upgrade() -> None:
             name="ck_tournaments_state",
         ),
         sa.CheckConstraint("entry_cents > 0", name="ck_tournaments_entry_pos"),
-        sa.CheckConstraint(
-            "pot_cents = prize_cents + rake_cents",
-            name="ck_tournaments_econ_reconciles",
-        ),
+        # No pot=prize+rake check (see solo_pools): refunds live outside prize+rake.
     )
     op.create_index("ix_tournaments_window_ends_at", "tournaments", ["window_ends_at"])
 
