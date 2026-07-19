@@ -21,4 +21,6 @@ export const env = {
   // Optional: with no key, client telemetry stays console-only (Phase 6).
   posthogKey: optional('VITE_POSTHOG_KEY'),
   posthogHost: optional('VITE_POSTHOG_HOST') ?? 'https://us.i.posthog.com',
+  // Optional: with no DSN, Sentry error tracking is disabled.
+  sentryDsn: optional('VITE_SENTRY_DSN'),
 };

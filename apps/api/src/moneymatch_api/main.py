@@ -47,13 +47,16 @@ API_V1_PREFIX = "/api/v1"
 def _init_sentry(settings: Settings) -> None:
     if not settings.sentry_dsn:
         return
+    import os
+
     import sentry_sdk
 
     sentry_sdk.init(
         dsn=settings.sentry_dsn,
         environment=settings.env,
-        release=settings.release,
+        release=os.getenv("RENDER_GIT_COMMIT") or settings.release,
         traces_sample_rate=0.0,
+        send_default_pii=True,
     )
 
 

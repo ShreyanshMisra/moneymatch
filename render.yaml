@@ -35,10 +35,7 @@ services:
           name: moneymatch-postgres
           property: connectionString
       - key: RELEASE
-        fromService:
-          type: web
-          name: moneymatch-api
-          property: id # replaced with the git SHA in the deploy pipeline
+        value: "" # Render injects the deploy commit SHA via $RENDER_GIT_COMMIT at runtime
       - fromGroup: moneymatch-shared
 
   - type: worker
