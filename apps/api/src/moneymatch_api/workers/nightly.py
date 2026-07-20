@@ -65,7 +65,11 @@ async def run_nightly(
     report = NightlyReport()
 
     async with sm() as session:
-        link_ids = list(await session.scalars(select(LinkedAccount.id)))
+        link_ids = list(
+            await session.scalars(
+                select(LinkedAccount.id).where(LinkedAccount.status != "unbound")
+            )
+        )
 
     for link_id in link_ids:
         async with sm() as session:

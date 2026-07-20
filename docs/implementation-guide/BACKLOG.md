@@ -24,10 +24,15 @@ Delivered code-side, excluding all KYC/real-money work:
   existing flag with a cheap `risk_flags` check (no per-enqueue host call).
 - **Derived risk detector** — nightly `win_streak` flag (informational; never
   blocks play) via a new `risk_flags.kind` + migration 0009.
+- **Soft-unbind with contest history** — `force_unbind` now sets
+  `status='unbound'` (row retained, FK history intact) instead of hard-deleting;
+  the binding-uniqueness indexes are partial on `status <> 'unbound'` (migration
+  0010) so a played account frees its slot and can be rebound. Independent of OAuth.
 
-Deferred by design in this run: OAuth binding (needs registered OAuth apps),
-everything KYC/real-money, reconciliation windowing, and directional value-flow
-(AML) monitoring.
+Deferred by design in this run: OAuth flows (need registered OAuth apps),
+everything KYC/real-money, reconciliation windowing, directional value-flow
+(AML) monitoring, and the Vite major bump (a dev-only advisory needing a
+coordinated vitest/plugin major — validate on the new major first).
 
 - **OAuth account binding** (Lichess OAuth, FaceIt OAuth2, Steam OpenID) —
   replaces username-claim; prerequisite for anything beyond internal beta

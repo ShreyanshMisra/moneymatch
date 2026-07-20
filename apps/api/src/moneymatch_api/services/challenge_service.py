@@ -135,7 +135,9 @@ async def _link_for(
 ) -> LinkedAccount | None:
     return await session.scalar(
         select(LinkedAccount).where(
-            LinkedAccount.user_id == user_id, LinkedAccount.game == game
+            LinkedAccount.user_id == user_id,
+            LinkedAccount.game == game,
+            LinkedAccount.status != "unbound",  # ignore soft-unbound history rows
         )
     )
 
