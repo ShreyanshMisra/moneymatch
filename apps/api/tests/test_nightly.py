@@ -25,8 +25,14 @@ class _FakeAdapter:
     def __init__(self, values_oldest_first):
         self._games = [
             NormGame(
-                id=str(i), speed="cs2", rated=True, created_at_ms=i,
-                moves=0, won=None, drawn=False, metrics={KD: v},
+                id=str(i),
+                speed="cs2",
+                rated=True,
+                created_at_ms=i,
+                moves=0,
+                won=None,
+                drawn=False,
+                metrics={KD: v},
             )
             for i, v in enumerate(values_oldest_first)
         ]
@@ -76,9 +82,7 @@ async def test_maybe_run_nightly_runs_once_then_throttles(monkeypatch):
         calls.append(now)
         return NightlyReport()
 
-    monkeypatch.setattr(
-        "moneymatch_api.workers.nightly.run_nightly", _fake_nightly
-    )
+    monkeypatch.setattr("moneymatch_api.workers.nightly.run_nightly", _fake_nightly)
     sm = new_sessionmaker()
 
     assert await settlement_worker.maybe_run_nightly(sm) is True  # never run → due

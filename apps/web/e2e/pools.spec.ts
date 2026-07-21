@@ -25,7 +25,10 @@ test('four similar players form a Medium K/D room, clear, and split the pool', a
   browser,
 }) => {
   test.skip(!e2eAuthConfigured(), 'Set E2E_AUTH=1 and run the stack with the seam on.');
-  test.skip(POOL_AUTH_IDS.length < 4, 'Need at least four seeded users to fill a room.');
+  test.skip(
+    POOL_AUTH_IDS.length < 4,
+    'Need at least four seeded users to fill a room.',
+  );
 
   const pages: Page[] = [];
   for (const authId of POOL_AUTH_IDS.slice(0, 4)) {

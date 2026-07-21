@@ -62,6 +62,4 @@ async def mint_e2e_token(
     if body.email:
         claims["email"] = body.email
     token = jwt.encode(claims, settings.supabase_jwt_secret, algorithm="HS256")
-    return E2ETokenResponse(
-        access_token=token, auth_id=body.auth_id, email=body.email
-    )
+    return E2ETokenResponse(access_token=token, auth_id=body.auth_id, email=body.email)

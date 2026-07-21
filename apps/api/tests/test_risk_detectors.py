@@ -22,23 +22,35 @@ _BASE = datetime(2026, 7, 1, tzinfo=UTC)
 
 async def _link(session, user):
     return await create_linked_account(
-        session, user, CS2, host_account_id=f"host_{user.username}",
+        session,
+        user,
+        CS2,
+        host_account_id=f"host_{user.username}",
         profile=cs2_profile(user.username),
     )
 
 
 async def _settled(session, user, link, *, winner_id, when):
     match = Match(
-        game=CS2, market="kd_ratio", entry_cents=1000, rake_bps=1000,
-        pot_cents=2000, prize_cents=1800, rake_cents=200,
-        state="SETTLED", winner_user_id=winner_id, resolved_at=when,
+        game=CS2,
+        market="kd_ratio",
+        entry_cents=1000,
+        rake_bps=1000,
+        pot_cents=2000,
+        prize_cents=1800,
+        rake_cents=200,
+        state="SETTLED",
+        winner_user_id=winner_id,
+        resolved_at=when,
     )
     session.add(match)
     await session.flush()
     session.add(
         MatchPlayer(
-            match_id=match.id, user_id=user.id,
-            linked_account_id=link.id, host_account_id=link.host_account_id,
+            match_id=match.id,
+            user_id=user.id,
+            linked_account_id=link.id,
+            host_account_id=link.host_account_id,
         )
     )
     await session.flush()
@@ -71,7 +83,10 @@ async def test_recent_loss_breaks_the_streak(session):
         )
     # Most recent settled match is a loss → the window isn't an unbroken run.
     await _settled(
-        session, user, link, winner_id=rival.id,
+        session,
+        user,
+        link,
+        winner_id=rival.id,
         when=_BASE + timedelta(hours=WIN_STREAK_THRESHOLD),
     )
     assert await risk_detectors.detect_win_streaks(session) == 0
